@@ -25,7 +25,7 @@ const CROUCH_TWEEN_SPEED = 0.025
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-#
+# Returns totem point node for totem movement
 func get_totem_point():
 	return totem_point
 
@@ -42,7 +42,7 @@ func crouch():
 	tween.tween_property(collider, "global_scale:y", collider_start_scale / 2, CROUCH_TWEEN_SPEED)
 	tween.tween_property(self, "position:y", position.y + 13, CROUCH_TWEEN_SPEED)
 	
-	# 
+	# Changes portrait's reaction to be crouching
 	signal_handler.emit_signal("alter_portrait", p_string, "crouch")
 	
 	# Causes player to move slower while crouching
@@ -56,7 +56,7 @@ func stand_up():
 	tween.tween_property(sprite, "global_scale:y", sprite_start_scale, CROUCH_TWEEN_SPEED)
 	tween.tween_property(collider, "global_scale:y", collider_start_scale, CROUCH_TWEEN_SPEED)
 
-	# 
+	# Changes portrait's reaction back to normal
 	signal_handler.emit_signal("alter_portrait", p_string, "idle")
 	
 	# Causes player to move at normal speed again
@@ -64,6 +64,7 @@ func stand_up():
 
 # Kills player
 func die():
+	# Changes portrait to skull and deletes player object
 	signal_handler.emit_signal("alter_portrait", p_string, "Dead")
 	queue_free()
 
