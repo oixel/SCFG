@@ -13,10 +13,11 @@ extends CharacterBody2D
 @onready var collider = $Collider
 @onready var collider_start_scale = collider.scale.y
 
-const WEIGHT = 6
 const WALK_SPEED = 500.0
 const CROUCH_SPEED = 250.0
 const JUMP_STRENGTH = 12
+
+var weight = 6
 
 @onready var speed = WALK_SPEED
 
@@ -71,7 +72,7 @@ func die():
 func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
-		velocity.y += gravity * WEIGHT * delta
+		velocity.y += gravity * weight * delta
 
 	# Handle jump.
 	if Input.is_action_just_pressed(p_string + "up") and is_on_floor():

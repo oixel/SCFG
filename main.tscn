@@ -1,11 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://bn16p6wb5glst"]
+[gd_scene load_steps=12 format=3 uid="uid://bn16p6wb5glst"]
 
 [ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
 [ext_resource type="Script" path="res://SignalHandler.gd" id="1_r3egu"]
 [ext_resource type="Script" path="res://Scripts/Player/PortraitController.gd" id="2_cgmvm"]
 [ext_resource type="Script" path="res://Void.gd" id="3_0mvlk"]
 [ext_resource type="PackedScene" uid="uid://b3hlox5u82bkf" path="res://Scenes/Player/totem.tscn" id="3_jk62i"]
-[ext_resource type="Texture2D" uid="uid://crta8meh7hun7" path="res://Sprites/Totems/Turtle.png" id="4_0b34g"]
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
 [ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
 
@@ -51,7 +50,6 @@ signal_handler = NodePath("..")
 [node name="P2_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
 position = Vector2(745, 416)
 player = NodePath("../Player2")
-texture = ExtResource("4_0b34g")
 
 [node name="Environment" type="Node2D" parent="."]
 position = Vector2(587, 280)

@@ -1,14 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://b3hlox5u82bkf"]
 
-[ext_resource type="Script" path="res://Scripts/Player/Totems/Totem.gd" id="1_8gime"]
+[ext_resource type="Script" path="res://Scripts/Totems/Totem.gd" id="1_8vnsm"]
 [ext_resource type="Texture2D" uid="uid://ccc17hx4yeap7" path="res://Sprites/Totems/Bird.png" id="2_pjj6j"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qvbe6"]
 
 [node name="P#_Totem" type="CharacterBody2D"]
 position = Vector2(294, 416)
-script = ExtResource("1_8gime")
-texture = ExtResource("2_pjj6j")
+script = ExtResource("1_8vnsm")
+totem_name = "Bird"
 
 [node name="TotemCollider" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qvbe6")
