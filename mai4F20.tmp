@@ -1,11 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://bn16p6wb5glst"]
+[gd_scene load_steps=9 format=3 uid="uid://bn16p6wb5glst"]
 
-[ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
+[ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/player.tscn" id="1_acsjv"]
 [ext_resource type="Script" path="res://SignalHandler.gd" id="1_r3egu"]
 [ext_resource type="Script" path="res://Scripts/Player/PortraitController.gd" id="2_cgmvm"]
-[ext_resource type="Script" path="res://Void.gd" id="3_0mvlk"]
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
-[ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
+[ext_resource type="Texture2D" uid="uid://bggflcs2esnc1" path="res://Sprites/Portrait/Faces/Crouch.png" id="5_ub25q"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0keou"]
 size = Vector2(750, 20)
@@ -16,9 +15,6 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_q27lo"]
 gradient = SubResource("Gradient_va7a8")
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_6tere"]
-size = Vector2(3000, 100)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -56,18 +52,6 @@ shape = SubResource("RectangleShape2D_0keou")
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
-[node name="Void" type="Node2D" parent="Environment"]
-
-[node name="Area2D" type="Area2D" parent="Environment/Void"]
-collision_layer = 0
-collision_mask = 3
-monitorable = false
-script = ExtResource("3_0mvlk")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Void/Area2D"]
-position = Vector2(0, 882)
-shape = SubResource("RectangleShape2D_6tere")
-
 [node name="PortraitController" type="Control" parent="." node_paths=PackedStringArray("signal_handler")]
 layout_mode = 1
 anchors_preset = 15
@@ -79,7 +63,7 @@ mouse_filter = 2
 script = ExtResource("2_cgmvm")
 signal_handler = NodePath("..")
 
-[node name="P1_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture")]
+[node name="P1_Portrait" type="Control" parent="PortraitController"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -88,30 +72,33 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("4_lascy")
-face_texture = NodePath("Background/FaceTexture")
 
 [node name="Border" type="ColorRect" parent="PortraitController/P1_Portrait"]
-layout_mode = 0
+layout_mode = 1
 offset_right = 110.0
 offset_bottom = 110.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="Background" type="ColorRect" parent="PortraitController/P1_Portrait"]
-layout_mode = 0
+layout_mode = 1
 offset_right = 100.0
 offset_bottom = 100.0
 mouse_filter = 2
 
 [node name="FaceTexture" type="TextureRect" parent="PortraitController/P1_Portrait/Background"]
 layout_mode = 1
-offset_right = 105.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.95, 0.95)
-texture = ExtResource("5_fl7k8")
+texture = ExtResource("5_ub25q")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="P2_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture")]
+[node name="P2_Portrait" type="Control" parent="PortraitController"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -119,8 +106,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("4_lascy")
-face_texture = NodePath("Background/FaceTexture")
 
 [node name="Border" type="ColorRect" parent="PortraitController/P2_Portrait"]
 layout_mode = 1
@@ -142,14 +127,3 @@ offset_left = -100.0
 offset_bottom = 100.0
 grow_horizontal = 0
 mouse_filter = 2
-
-[node name="FaceTexture" type="TextureRect" parent="PortraitController/P2_Portrait/Background"]
-layout_mode = 1
-offset_right = 105.0
-offset_bottom = 105.0
-scale = Vector2(0.95, 0.95)
-texture = ExtResource("5_fl7k8")
-expand_mode = 5
-stretch_mode = 5
-
-[connection signal="body_entered" from="Environment/Void/Area2D" to="Environment/Void/Area2D" method="_on_body_entered"]

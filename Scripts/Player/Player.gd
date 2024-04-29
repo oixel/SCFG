@@ -3,6 +3,8 @@ extends CharacterBody2D
 @export var player_number = 1
 @onready var p_string = "P" + str(player_number) + "_"
 
+@export var signal_handler : Node
+
 const WEIGHT = 6
 const WALK_SPEED = 500.0
 const CROUCH_SPEED = 250.0
@@ -25,7 +27,10 @@ func crouch():
 	var tween = create_tween()
 	tween.set_parallel()
 	tween.tween_property(self, "scale:y", 0.5, CROUCH_TWEEN_SPEED)
-	tween.tween_property(self, "position:y", position.y + 28, CROUCH_TWEEN_SPEED)
+	tween.tween_property(self, "position:y", position.y + 13, CROUCH_TWEEN_SPEED)
+	
+	# 
+	signal_handler.emit_signal("alter_portrait", p_string, "crouch")
 	
 	# Causes player to move slower while crouching
 	speed = CROUCH_SPEED
@@ -36,10 +41,18 @@ func stand_up():
 	var tween = create_tween()
 	tween.set_parallel()
 	tween.tween_property(self, "scale:y", 1, CROUCH_TWEEN_SPEED)
-	tween.tween_property(self, "position:y", position.y - 28, CROUCH_TWEEN_SPEED)
+	tween.tween_property(self, "position:y", position.y - 13, CROUCH_TWEEN_SPEED)
+	
+	# 
+	signal_handler.emit_signal("alter_portrait", p_string, "idle")
 	
 	# Causes player to move at normal speed again
 	speed = WALK_SPEED
+
+# Kills player
+func die():
+	signal_handler.emit_signal("alter_portrait", p_string, "Dead")
+	queue_free()
 
 func _physics_process(delta):
 	# Add the gravity.
