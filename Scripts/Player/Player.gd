@@ -79,7 +79,7 @@ func _physics_process(delta):
 		jump()
 	
 	# Handle crouching
-	if Input.is_action_just_pressed(p_string + "down"):
+	if Input.is_action_just_pressed(p_string + "down") and is_on_floor():
 		crouch()
 	elif Input.is_action_just_released(p_string + "down"):
 		stand_up()
