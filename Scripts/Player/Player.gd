@@ -89,5 +89,9 @@ func _physics_process(delta):
 		velocity.x = direction * speed
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
-
+	
+	# Flips transform of player
+	if direction != 0: 
+		transform.x.x = sign(direction)
+	
 	move_and_slide()

@@ -1,15 +1,13 @@
-[gd_scene load_steps=14 format=3 uid="uid://bn16p6wb5glst"]
+[gd_scene load_steps=13 format=3 uid="uid://bn16p6wb5glst"]
 
 [ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
 [ext_resource type="Script" path="res://SignalHandler.gd" id="1_r3egu"]
 [ext_resource type="Script" path="res://Scripts/Player/PortraitController.gd" id="2_cgmvm"]
 [ext_resource type="Script" path="res://Void.gd" id="3_0mvlk"]
-[ext_resource type="Script" path="res://Scripts/Player/Totems/Totem.gd" id="3_dcv6x"]
+[ext_resource type="PackedScene" uid="uid://b3hlox5u82bkf" path="res://Scenes/Player/totem.tscn" id="3_jk62i"]
+[ext_resource type="Texture2D" uid="uid://crta8meh7hun7" path="res://Sprites/Totems/Turtle.png" id="4_0b34g"]
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
-[ext_resource type="Texture2D" uid="uid://ccc17hx4yeap7" path="res://Sprites/Totems/Bird.png" id="4_uud1f"]
 [ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_qvbe6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0keou"]
 size = Vector2(750, 20)
@@ -37,32 +35,23 @@ script = ExtResource("1_r3egu")
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 
-[node name="Player" parent="." node_paths=PackedStringArray("signal_handler", "totem_point") instance=ExtResource("1_acsjv")]
+[node name="Player" parent="." node_paths=PackedStringArray("signal_handler") instance=ExtResource("1_acsjv")]
 position = Vector2(350, 465)
 player_number = 1
 signal_handler = NodePath("..")
-totem_point = NodePath("../P1_Totem")
 
-[node name="TotemPoint" type="Node2D" parent="Player"]
-position = Vector2(-56, -46)
-
-[node name="P1_Totem" type="CharacterBody2D" parent="." node_paths=PackedStringArray("totem_point")]
-position = Vector2(294, 416)
-script = ExtResource("3_dcv6x")
-totem_point = NodePath("../Player/TotemPoint")
-
-[node name="TotemCollider" type="CollisionShape2D" parent="P1_Totem"]
-shape = SubResource("CircleShape2D_qvbe6")
-disabled = true
-
-[node name="TotemSprite" type="Sprite2D" parent="P1_Totem"]
-scale = Vector2(0.055, 0.055)
-texture = ExtResource("4_uud1f")
+[node name="P1_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
+player = NodePath("../Player")
 
 [node name="Player2" parent="." node_paths=PackedStringArray("signal_handler") instance=ExtResource("1_acsjv")]
-position = Vector2(790, 475)
+position = Vector2(797, 465)
 player_number = 2
 signal_handler = NodePath("..")
+
+[node name="P2_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
+position = Vector2(745, 416)
+player = NodePath("../Player2")
+texture = ExtResource("4_0b34g")
 
 [node name="Environment" type="Node2D" parent="."]
 position = Vector2(587, 280)
