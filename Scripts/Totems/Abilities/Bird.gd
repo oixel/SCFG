@@ -1,16 +1,23 @@
 extends Node
 
 var player : CharacterBody2D
-var normal_weight
-var glide_weight = 0.05
 var p_string : String
 
-var hold_time = 0
+# Stores different weights for gliding functionality
+var normal_weight
+var glide_weight = 0.05
+
+# Max time button needs to be held to activate glide
 var glide_time_min = 0.225
 
-var max_jumps : int = 3
+# Keeps track of current amount of time that button has been held
+var hold_time = 0
+
+# Max amount of times player can jump and current jump count
+var max_jumps : int = 2
 var jump_count : int = 0
 
+# Initializes player and default values
 func set_player(_player : CharacterBody2D):
 	player = _player
 	p_string = player.p_string
