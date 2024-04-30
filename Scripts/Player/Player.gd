@@ -1,26 +1,33 @@
 extends CharacterBody2D
 
-@export var player_number = 1
-@onready var p_string = "P" + str(player_number) + "_"
-
+# Used in altering portrait's reaction
 @export var signal_handler : Node
 
+# Differentiates player controls depending on if 1 or 2
+@export_range(1, 2) var player_number : int
+
+# Used to check button presses for different players
+@onready var p_string = "P" + str(player_number) + "_"
+
+# Stores point where totem should go to
 @export var totem_point : Node
 
-
+# Objects that get changed during crouch
 @onready var sprite = $PlayerSprite
 @onready var sprite_start_scale = sprite.scale.y
 @onready var collider = $Collider
 @onready var collider_start_scale = collider.scale.y
 
+# Different movement variables
 const WALK_SPEED = 500.0
 const CROUCH_SPEED = 250.0
 const JUMP_STRENGTH = 12
-
-var weight = 6
-
 @onready var speed = WALK_SPEED
 
+# Changes how fast player falls while in air
+var weight = 6
+
+# Changes how fast crouch animation occurs
 const CROUCH_TWEEN_SPEED = 0.025
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
