@@ -1,9 +1,9 @@
 [gd_scene load_steps=12 format=3 uid="uid://bn16p6wb5glst"]
 
 [ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
-[ext_resource type="Script" path="res://SignalHandler.gd" id="1_r3egu"]
+[ext_resource type="Script" path="res://Scripts/World/SignalHandler.gd" id="1_r3egu"]
 [ext_resource type="Script" path="res://Scripts/Player/PortraitController.gd" id="2_cgmvm"]
-[ext_resource type="Script" path="res://Void.gd" id="3_0mvlk"]
+[ext_resource type="Script" path="res://Scripts/World/Void.gd" id="3_0mvlk"]
 [ext_resource type="PackedScene" uid="uid://b3hlox5u82bkf" path="res://Scenes/Player/totem.tscn" id="3_jk62i"]
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
 [ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
@@ -50,7 +50,7 @@ player_number = 2
 [node name="P2_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
 position = Vector2(745, 416)
 player = NodePath("../Player2")
-totem_name = "Octopus"
+totem_name = "Rabbit"
 
 [node name="Environment" type="Node2D" parent="."]
 position = Vector2(587, 280)
@@ -62,6 +62,17 @@ position = Vector2(0, 286)
 shape = SubResource("RectangleShape2D_0keou")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Ground"]
+scale = Vector2(3.01, 18.97)
+texture = SubResource("GradientTexture1D_q27lo")
+
+[node name="Wall" type="StaticBody2D" parent="Environment"]
+position = Vector2(342, 526)
+rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Wall"]
+shape = SubResource("RectangleShape2D_0keou")
+
+[node name="Sprite2D" type="Sprite2D" parent="Environment/Wall"]
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
