@@ -24,7 +24,10 @@ extends CharacterBody2D
 
 # Handles cooldown time on empty-handed melee attack
 @onready var melee_timer : Timer = Timer.new()
-var melee_cooldown : int = 0
+var melee_cooldown : int = 1
+
+# Can be altered by totems to make player take less knockback
+var knockback_resistance : float = 0
 
 # Objects that get changed during crouch
 @onready var sprite = $Sprites/PlayerSprite
@@ -104,7 +107,7 @@ func hit(damage, knockback, hit_direction):
 	health_text.text = "[center]" + str(health)
 	
 	# Applies knockback in direction of hit
-	added_forces = Vector2(knockback * 1000 * hit_direction, knockback * -300)
+	added_forces = Vector2((knockback - knockback_resistance) * 1000 * hit_direction, knockback * -300)
 	
 	# Kills player when health gets too low
 	if health <= 0:
@@ -182,4 +185,3 @@ func _physics_process(delta):
 	if added_forces != Vector2(0, 0):
 		var tween = create_tween()
 		tween.tween_property(self, "added_forces", Vector2(0, 0), APPLIED_FORCE_TWEEN_SPEED)
-	
