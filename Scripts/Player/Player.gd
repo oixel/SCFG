@@ -24,7 +24,7 @@ extends CharacterBody2D
 
 # Handles cooldown time on empty-handed melee attack
 @onready var melee_timer : Timer = Timer.new()
-var melee_cooldown : int = 0.1
+var melee_cooldown : int = 0
 
 # Objects that get changed during crouch
 @onready var sprite = $Sprites/PlayerSprite
@@ -147,7 +147,7 @@ func _physics_process(delta):
 	
 	# Plays animation and attempts to attack in front of player
 	if Input.is_action_just_pressed(p_string + "attack") and melee_timer.is_stopped():
-		melee_timer.start()
+		#melee_timer.start() -- Uncomment to implement cooldown
 		$AnimationPlayer.play("attack")
 		if hit_area.get_overlapping_bodies():
 			for obj in hit_area.get_overlapping_bodies():
