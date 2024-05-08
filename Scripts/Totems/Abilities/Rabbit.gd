@@ -42,6 +42,10 @@ func _ready():
 	crouch_run_speed = crouch_speed * RUN_MULTIPLIER
 
 func _physics_process(_delta):
+	# Prevents code from running if player just died
+	if player.health <= 0:
+		return
+	
 	# Stops running when direction is let go
 	if Input.is_action_just_released(p_string + "right") or Input.is_action_just_released(p_string + "left") and running:
 		running = false

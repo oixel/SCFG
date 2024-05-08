@@ -24,6 +24,10 @@ func set_player(_player : CharacterBody2D):
 	normal_weight = player.weight
 
 func _physics_process(delta):
+	# Prevents code from running if player just died
+	if player.health <= 0:
+		return
+	
 	if (player.is_on_floor()):
 		# Resets jump counter when landing on ground
 		jump_count = 0
