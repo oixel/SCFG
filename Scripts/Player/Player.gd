@@ -22,6 +22,10 @@ extends CharacterBody2D
 # Damage that basic empty-handed melee attack does
 @export var melee_damage : int = 5
 
+# Handles cooldown time on empty-handed melee attack
+@onready var melee_timer : Timer = Timer.new()
+var melee_cooldown : int = 0.1
+
 # Objects that get changed during crouch
 @onready var sprite = $Sprites/PlayerSprite
 @onready var sprite_start_scale = sprite.scale.y
@@ -42,11 +46,17 @@ var weight = 6
 # Changes how fast crouch animation occurs
 const CROUCH_TWEEN_SPEED = 0.025
 
+# Changes how fast applied forces should reset back to zero
+const APPLIED_FORCE_TWEEN_SPEED = 0.03
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # Keeps track of what direction player is moving
 var direction
+
+# Added to velocity to replicate knockback
+var added_forces : Vector2
 
 # Returns totem point node for totem movement
 func get_totem_point():
@@ -87,11 +97,16 @@ func stand_up():
 	
 	crouched = false
 
-# 
-func hit(damage):
+# Takes damage and applies knockback when player is hit
+func hit(damage, knockback, hit_direction):
+	# Damages player and updates health text
 	health -= damage
 	health_text.text = "[center]" + str(health)
 	
+	# Applies knockback in direction of hit
+	added_forces = Vector2(knockback * 1000 * hit_direction, knockback * -300)
+	
+	# Kills player when health gets too low
 	if health <= 0:
 		die()
 
@@ -100,6 +115,12 @@ func die():
 	# Changes portrait to skull and deletes player object
 	signal_handler.emit_signal("alter_portrait", p_string, "Dead")
 	queue_free()
+
+# Called at start
+func _ready():
+	melee_timer.one_shot = true
+	melee_timer.wait_time = melee_cooldown
+	add_child(melee_timer)
 
 func _physics_process(delta):
 	# Add the gravity.
@@ -125,11 +146,12 @@ func _physics_process(delta):
 		stand_up()
 	
 	# Plays animation and attempts to attack in front of player
-	if Input.is_action_just_pressed(p_string + "attack"):
+	if Input.is_action_just_pressed(p_string + "attack") and melee_timer.is_stopped():
+		melee_timer.start()
 		$AnimationPlayer.play("attack")
 		if hit_area.get_overlapping_bodies():
 			for obj in hit_area.get_overlapping_bodies():
-				obj.hit(melee_damage)
+				obj.hit(melee_damage, 1, sign(transform.x.x))
 	
 	# Causes player to move at normal speed again
 	speed = crouch_speed if crouched else walk_speed
@@ -151,4 +173,13 @@ func _physics_process(delta):
 		transform.x.x = sign(direction)
 		health_text.get_parent().transform.x.x = sign(direction)
 	
+	# Applies knockback to player
+	velocity += added_forces
+	
 	move_and_slide()
+	
+	# Slowly resets forces back to zero to avoid infinite knockback
+	if added_forces != Vector2(0, 0):
+		var tween = create_tween()
+		tween.tween_property(self, "added_forces", Vector2(0, 0), APPLIED_FORCE_TWEEN_SPEED)
+	
