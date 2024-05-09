@@ -9,6 +9,9 @@ extends CharacterBody2D
 # Used to check button presses for different players
 @onready var p_string = "P" + str(player_number) + "_"
 
+# Stores player's hand node
+@export var hand : Node
+
 # Stores point where totem should go to
 @export var totem_point : Node
 
@@ -165,10 +168,14 @@ func _physics_process(delta):
 		$AnimationPlayer.play("attack")
 		if hit_area.get_overlapping_bodies():
 			for obj in hit_area.get_overlapping_bodies():
+				# Damages player if in range
 				if obj.is_in_group("Player"):
 					obj.hit(melee_damage, 1, sign(transform.x.x))
+				# Picks up any items if hand is currently empty
 				elif obj.is_in_group("Pickup"):
-					print("pickup!")
+					if hand.is_empty:
+						hand.pickup(obj.get_pickup_name())
+						obj.destroy()
 	
 	# Causes player to move at normal speed again
 	speed = crouch_speed if crouched else walk_speed
