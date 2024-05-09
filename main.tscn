@@ -62,6 +62,7 @@ position = Vector2(0, 286)
 shape = SubResource("RectangleShape2D_0keou")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Ground"]
+z_index = 1
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
@@ -73,6 +74,7 @@ rotation = 1.5708
 shape = SubResource("RectangleShape2D_0keou")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/Wall"]
+z_index = 1
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
@@ -83,6 +85,7 @@ position = Vector2(-806, 131)
 shape = SubResource("RectangleShape2D_0keou")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/LeftPlatform"]
+z_index = 1
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
@@ -93,6 +96,7 @@ position = Vector2(559, -19)
 shape = SubResource("RectangleShape2D_0keou")
 
 [node name="Sprite2D" type="Sprite2D" parent="Environment/RightPlatform"]
+z_index = 1
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
