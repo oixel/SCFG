@@ -27,11 +27,7 @@ extends CharacterBody2D
 
 # Invulnerability is applied when player rolls
 var roll_timer : Timer = Timer.new()
-var roll_time : float = 0.3
-
-# Handles cooldown time on empty-handed melee attack
-@onready var melee_timer : Timer = Timer.new()
-var melee_cooldown : float = 1
+var roll_time : float = 0.35
 
 # Can be altered by totems to make player take less knockback
 var knockback_resistance : float = 0
@@ -49,6 +45,7 @@ var jump_strength = 12
 @onready var speed = walk_speed
 
 var crouched = false
+var rolling = false
 
 # Changes how fast player falls while in air
 var weight = 6
@@ -64,6 +61,9 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 # Keeps track of what direction player is moving
 var direction
+
+# Stores direction that player is moving when roll started
+var roll_direction
 
 # Added to velocity to replicate knockback
 var added_forces : Vector2
@@ -108,9 +108,23 @@ func stand_up():
 	
 	crouched = false
 
+# Handles attacking when empty handed
+func attack():
+	$AnimationPlayer.play("attack")
+	if hit_area.get_overlapping_bodies():
+		for obj in hit_area.get_overlapping_bodies():
+			# Damages player if in range
+			if obj.is_in_group("Player"):
+				obj.hit(melee_damage, 1, sign(transform.x.x))
+			# Picks up any items if hand is currently empty
+			elif obj.is_in_group("Pickup"):
+				if hand.is_empty:
+					hand.pickup(self, obj.get_pickup_path())
+					obj.destroy()
+
 # Takes damage and applies knockback when player is hit
 func hit(damage, knockback, hit_direction):
-	if roll_timer.is_stopped():
+	if !rolling:
 		# Damages player and updates health text
 		health -= damage
 		health_text.text = "[center]" + str(health)
@@ -130,16 +144,15 @@ func die():
 
 # Called at start
 func _ready():
-	melee_timer.one_shot = true
-	melee_timer.wait_time = melee_cooldown
-	add_child(melee_timer)
-	
 	# Handles invulnerability caused by roll time
 	roll_timer.one_shot = true
 	roll_timer.wait_time = roll_time
 	add_child(roll_timer)
 
 func _physics_process(delta):
+	# Changes rolling state depending if the invulnerability timer is running
+	rolling = false if roll_timer.is_stopped() else true
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
@@ -156,6 +169,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed(p_string + "down") and is_on_floor():
 		# Makes player roll if crouch is pressed while moving in a direction
 		if direction:
+			roll_direction = direction
 			roll()
 		else:
 			crouch()
@@ -163,25 +177,22 @@ func _physics_process(delta):
 		stand_up()
 	
 	# Plays animation and attempts to attack in front of player
-	if Input.is_action_just_pressed(p_string + "attack") and melee_timer.is_stopped():
-		#melee_timer.start() -- Uncomment to implement cooldown
-		$AnimationPlayer.play("attack")
-		if hit_area.get_overlapping_bodies():
-			for obj in hit_area.get_overlapping_bodies():
-				# Damages player if in range
-				if obj.is_in_group("Player"):
-					obj.hit(melee_damage, 1, sign(transform.x.x))
-				# Picks up any items if hand is currently empty
-				elif obj.is_in_group("Pickup"):
-					if hand.is_empty:
-						hand.pickup(obj.get_pickup_name())
-						obj.destroy()
+	if Input.is_action_just_pressed(p_string + "attack") and !rolling:
+		if hand.is_empty:
+			attack()
+		else:
+			hand.attack()
 	
 	# Causes player to move at normal speed again
 	speed = crouch_speed if crouched else walk_speed
 	
-	# Get the input direction and handle the movement/deceleration.
-	direction = Input.get_axis(p_string + "left", p_string + "right")
+	# Prevents chage of direction while rolling
+	if !rolling:
+		# Get the input direction and handle the movement/deceleration.
+		direction = Input.get_axis(p_string + "left", p_string + "right")
+	else:
+		direction = roll_direction
+	
 	if direction:
 		if !$AnimationPlayer.is_playing():
 			$AnimationPlayer.play("walk")
