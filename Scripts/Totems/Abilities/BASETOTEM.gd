@@ -9,5 +9,5 @@ func set_player(_player : CharacterBody2D):
 
 func _physics_process(_delta):
 	# Prevents code from running if player just died
-	if player.health <= 0:
+	if !player:
 		return

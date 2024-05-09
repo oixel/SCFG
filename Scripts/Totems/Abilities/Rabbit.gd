@@ -43,7 +43,7 @@ func _ready():
 
 func _physics_process(_delta):
 	# Prevents code from running if player just died
-	if player.health <= 0:
+	if !player:
 		return
 	
 	# Stops running when direction is let go

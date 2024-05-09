@@ -25,7 +25,8 @@ func set_player(_player : CharacterBody2D):
 
 func _physics_process(delta):
 	# Prevents code from running if player just died
-	if player.health <= 0:
+	if !player:
+		print("BLOCKED")
 		return
 	
 	if (player.is_on_floor()):
