@@ -22,9 +22,13 @@ extends CharacterBody2D
 # Damage that basic empty-handed melee attack does
 @export var melee_damage : int = 5
 
+# Invulnerability is applied when player rolls
+var roll_timer : Timer = Timer.new()
+var roll_time : float = 0.3
+
 # Handles cooldown time on empty-handed melee attack
 @onready var melee_timer : Timer = Timer.new()
-var melee_cooldown : int = 1
+var melee_cooldown : float = 1
 
 # Can be altered by totems to make player take less knockback
 var knockback_resistance : float = 0
@@ -72,6 +76,7 @@ func jump():
 # Plays roll animation and grants temporary invulnerability
 func roll():
 	$AnimationPlayer.play("roll")
+	roll_timer.start()
 
 # Makes player crouch down
 func crouch():
@@ -102,16 +107,17 @@ func stand_up():
 
 # Takes damage and applies knockback when player is hit
 func hit(damage, knockback, hit_direction):
-	# Damages player and updates health text
-	health -= damage
-	health_text.text = "[center]" + str(health)
-	
-	# Applies knockback in direction of hit
-	added_forces = Vector2((knockback - knockback_resistance) * 1000 * hit_direction, knockback * -300)
-	
-	# Kills player when health gets too low
-	if health <= 0:
-		die()
+	if roll_timer.is_stopped():
+		# Damages player and updates health text
+		health -= damage
+		health_text.text = "[center]" + str(health)
+		
+		# Applies knockback in direction of hit
+		added_forces = Vector2((knockback - knockback_resistance) * 1000 * hit_direction, knockback * -300)
+		
+		# Kills player when health gets too low
+		if health <= 0:
+			die()
 
 # Kills player
 func die():
@@ -124,6 +130,11 @@ func _ready():
 	melee_timer.one_shot = true
 	melee_timer.wait_time = melee_cooldown
 	add_child(melee_timer)
+	
+	# Handles invulnerability caused by roll time
+	roll_timer.one_shot = true
+	roll_timer.wait_time = roll_time
+	add_child(roll_timer)
 
 func _physics_process(delta):
 	# Add the gravity.
@@ -160,7 +171,6 @@ func _physics_process(delta):
 	speed = crouch_speed if crouched else walk_speed
 	
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
 	direction = Input.get_axis(p_string + "left", p_string + "right")
 	if direction:
 		if !$AnimationPlayer.is_playing():
