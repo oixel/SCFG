@@ -165,7 +165,10 @@ func _physics_process(delta):
 		$AnimationPlayer.play("attack")
 		if hit_area.get_overlapping_bodies():
 			for obj in hit_area.get_overlapping_bodies():
-				obj.hit(melee_damage, 1, sign(transform.x.x))
+				if obj.is_in_group("Player"):
+					obj.hit(melee_damage, 1, sign(transform.x.x))
+				elif obj.is_in_group("Pickup"):
+					print("pickup!")
 	
 	# Causes player to move at normal speed again
 	speed = crouch_speed if crouched else walk_speed
