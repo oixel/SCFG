@@ -19,7 +19,7 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 gradient = SubResource("Gradient_va7a8")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6tere"]
-size = Vector2(3000, 100)
+size = Vector2(12000, 100)
 
 [node name="Main" type="Control"]
 layout_mode = 3
