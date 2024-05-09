@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bn16p6wb5glst"]
+[gd_scene load_steps=13 format=3 uid="uid://bn16p6wb5glst"]
 
 [ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
 [ext_resource type="Script" path="res://Scripts/World/SignalHandler.gd" id="1_r3egu"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b3hlox5u82bkf" path="res://Scenes/Player/totem.tscn" id="3_jk62i"]
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
 [ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
+[ext_resource type="PackedScene" uid="uid://bi8trul88bxub" path="res://Scenes/Pickups/BASEPICKUP.tscn" id="5_v7xf1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0keou"]
 size = Vector2(750, 20)
@@ -111,6 +112,11 @@ script = ExtResource("3_0mvlk")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/Void/Area2D"]
 position = Vector2(0, 882)
 shape = SubResource("RectangleShape2D_6tere")
+
+[node name="Pickups" type="Node2D" parent="."]
+
+[node name="BASEPICKUP" parent="Pickups" instance=ExtResource("5_v7xf1")]
+position = Vector2(521, 379)
 
 [node name="PortraitController" type="Control" parent="." node_paths=PackedStringArray("signal_handler")]
 layout_mode = 1
