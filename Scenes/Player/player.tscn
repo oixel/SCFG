@@ -276,4 +276,4 @@ sprite = NodePath("ItemSprite")
 [node name="ItemSprite" type="Sprite2D" parent="Hand"]
 position = Vector2(-13, 14)
 rotation = 0.253073
-scale = Vector2(0.035, 0.035)
+scale = Vector2(0.05, 0.05)
