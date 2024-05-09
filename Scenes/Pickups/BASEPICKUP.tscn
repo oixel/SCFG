@@ -1,12 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://bi8trul88bxub"]
+[gd_scene load_steps=4 format=3 uid="uid://bi8trul88bxub"]
 
 [ext_resource type="Texture2D" uid="uid://ckqt4627ohwpj" path="res://Sprites/Pickups/brown_square.png" id="1_0bmfo"]
+[ext_resource type="Script" path="res://Scripts/Pickups/Pickup.gd" id="1_a0nlp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v1j7x"]
 size = Vector2(30, 30)
 
 [node name="BASEPICKUP" type="RigidBody2D" groups=["Pickup"]]
 collision_layer = 2
+script = ExtResource("1_a0nlp")
+pickup_name = "brown_square"
 
 [node name="Sprite" type="Sprite2D" parent="."]
 z_index = -1
