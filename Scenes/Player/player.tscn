@@ -203,11 +203,12 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ph3v2"]
 size = Vector2(86, 48.5)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hand", "totem_point", "hit_area", "health_text") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hand", "totem_point", "projectile_point", "hit_area", "health_text") groups=["Player"]]
 collision_layer = 2
 script = ExtResource("1_qpsbt")
 hand = NodePath("Hand")
 totem_point = NodePath("TotemPoint")
+projectile_point = NodePath("ProjectilePoint")
 hit_area = NodePath("HitArea")
 health_text = NodePath("HealthContent/RichTextLabel")
 
@@ -235,6 +236,9 @@ shape = SubResource("RectangleShape2D_qtu8a")
 [node name="TotemPoint" type="Node2D" parent="."]
 position = Vector2(-53, -49)
 scale = Vector2(2.615, 2.615)
+
+[node name="ProjectilePoint" type="Node2D" parent="."]
+position = Vector2(48, 0)
 
 [node name="HitArea" type="Area2D" parent="."]
 collision_layer = 0
