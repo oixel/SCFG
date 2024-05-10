@@ -15,6 +15,9 @@ extends CharacterBody2D
 # Stores point where totem should go to
 @export var totem_point : Node
 
+# Stores the point where projectiles should be spawned
+@export var projectile_point : Node
+
 # Trigger area for melee damage and grab
 @export var hit_area : Area2D
 
@@ -135,6 +138,9 @@ func hit(damage, knockback, hit_direction):
 		# Kills player when health gets too low
 		if health <= 0:
 			die()
+		
+		return true
+	return false
 
 # Kills player
 func die():
