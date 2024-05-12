@@ -124,6 +124,9 @@ func attack():
 				if hand.is_empty:
 					hand.pickup(self, obj.get_pickup_path())
 					obj.destroy()
+					
+					# Prevents application of weapon's damage if enemy in path of pickups
+					break
 
 # Takes damage and applies knockback when player is hit
 func hit(damage, knockback, hit_direction):
