@@ -16,7 +16,7 @@ const BULLET = preload("res://Scenes/Projectiles/bullet.tscn")
 
 # Called at start
 func _ready():
-	# Handles reload time
+	# Initializes timer for reloading gun
 	reload_timer.one_shot = true
 	reload_timer.wait_time = reload_time
 	add_child(reload_timer)
@@ -28,21 +28,24 @@ func _ready():
 func set_player(_player):
 	player = _player
 
+# Summons bullet and subtracts from ammo count
+func shoot():
+	# Subtracts one bullet from current count
+	ammo_count -= 1
+	
+	# Instantiates bullet at player's projectile point
+	var bullet = BULLET.instantiate()
+	player.signal_handler.add_child(bullet)
+	bullet.global_position = player.projectile_point.global_position
+	
+	# Sets movement direction of bullet depending on which way the player is facing
+	bullet.set_direction(sign(player.transform.x.x))
+
 # Handles attack when pickup is in hand
 func attack():
 	# Only allows shooting if ammo available and not reloading
 	if ammo_count > 0 and reload_timer.is_stopped():
-		
-		# Subtracts one bullet from current count
-		ammo_count -= 1
-		
-		# Instantiates bullet at player's projectile point
-		var bullet = BULLET.instantiate()
-		player.signal_handler.add_child(bullet)
-		bullet.global_position = player.projectile_point.global_position
-		
-		# Sets movement direction of bullet depending on which way the player is facing
-		bullet.set_direction(sign(player.transform.x.x))
+		shoot()
 	
 	# Automatically starts reload when out of bullets
 	if ammo_count <= 0:
