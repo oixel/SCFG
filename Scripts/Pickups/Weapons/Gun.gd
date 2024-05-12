@@ -4,6 +4,9 @@ extends Node2D
 @export var max_ammo_count : int = 6
 var ammo_count : int
 
+# Handles how much damage each bullet does
+@export var bullet_damage : int = 4
+
 # Stores time that it takes for gun to automatically reload
 @export var reload_time : float = 1.5
 var reload_timer : Timer = Timer.new()
@@ -37,6 +40,9 @@ func shoot():
 	var bullet = BULLET.instantiate()
 	player.signal_handler.add_child(bullet)
 	bullet.global_position = player.projectile_point.global_position
+	
+	# Changes bullet damage depending on exported variable
+	bullet.damage = bullet_damage
 	
 	# Sets movement direction of bullet depending on which way the player is facing
 	bullet.set_direction(sign(player.transform.x.x))

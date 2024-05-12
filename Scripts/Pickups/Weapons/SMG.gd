@@ -4,6 +4,9 @@ extends Node2D
 @export var max_ammo_count : int = 12
 var ammo_count : int
 
+# Handles how much damage each bullet does
+@export var bullet_damage : int = 2
+
 # Handles gap between each bullet shot by SMG
 @export var gap_time : float = 0.025
 var gap_timer : Timer = Timer.new()
@@ -47,18 +50,20 @@ func shoot():
 	player.signal_handler.add_child(bullet)
 	bullet.global_position = player.projectile_point.global_position
 	
+	# Changes bullet damage depending on exported variable
+	bullet.damage = bullet_damage
+	
 	# Sets movement direction of bullet depending on which way the player is facing
 	bullet.set_direction(sign(player.transform.x.x))
 
 # Handles actual attacking for SMG
 func _physics_process(_delta):
 	# Only shoots gun when it has ammo and is not currently reloading
-	if Input.is_action_pressed(player.p_string + "attack") and reload_timer.is_stopped():
+	if Input.is_action_pressed(player.p_string + "attack") and ammo_count > 0 and reload_timer.is_stopped():
 		# Waits a short time before firing each bullet to prevent clumping
 		if gap_timer.is_stopped():
-			if ammo_count > 0:
-				shoot()
-				gap_timer.start()
+			shoot()
+			gap_timer.start()
 	# Reloads gun when out of ammo
 	elif ammo_count <= 0:
 		ammo_count = max_ammo_count
