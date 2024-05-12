@@ -119,8 +119,12 @@ shape = SubResource("RectangleShape2D_6tere")
 position = Vector2(521, 379)
 
 [node name="Gun" parent="Pickups" instance=ExtResource("5_v7xf1")]
-position = Vector2(120, 291)
+position = Vector2(86, 358)
 pickup_name = "gun"
+
+[node name="SMG" parent="Pickups" instance=ExtResource("5_v7xf1")]
+position = Vector2(845, 185)
+pickup_name = "smg"
 
 [node name="PortraitController" type="Control" parent="." node_paths=PackedStringArray("signal_handler")]
 layout_mode = 1
