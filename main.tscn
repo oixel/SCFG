@@ -118,9 +118,9 @@ shape = SubResource("RectangleShape2D_6tere")
 [node name="Sword" parent="Pickups" instance=ExtResource("5_v7xf1")]
 position = Vector2(521, 379)
 
-[node name="Gun" parent="Pickups" instance=ExtResource("5_v7xf1")]
+[node name="Pistol" parent="Pickups" instance=ExtResource("5_v7xf1")]
 position = Vector2(86, 358)
-pickup_name = "gun"
+pickup_name = "pistol"
 
 [node name="SMG" parent="Pickups" instance=ExtResource("5_v7xf1")]
 position = Vector2(845, 185)

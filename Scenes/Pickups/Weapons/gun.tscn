@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c16vchrka6031"]
-
-[ext_resource type="Script" path="res://Scripts/Pickups/Weapons/Gun.gd" id="1_3hkf0"]
-
-[node name="Gun" type="Node2D" groups=["Pickup"]]
-script = ExtResource("1_3hkf0")
