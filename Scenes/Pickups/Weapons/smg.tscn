@@ -4,3 +4,4 @@
 
 [node name="SMG" type="Node2D" groups=["Pickup"]]
 script = ExtResource("1_kbup5")
+gap_time = 0.035
