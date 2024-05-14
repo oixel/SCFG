@@ -15,8 +15,12 @@ var gap_timer : Timer = Timer.new()
 @export var reload_time : float = 2
 var reload_timer : Timer = Timer.new()
 
+# Prevents auto shooting when pickup button is held after picking up
+var just_picked_up : bool = true
+
 # Stores player carrying gun to detect when attack is called
 var player
+var p_string
 
 # Preloads bullet scene for instantiating when shooting
 const BULLET = preload("res://Scenes/Projectiles/bullet.tscn")
@@ -33,12 +37,13 @@ func _ready():
 	reload_timer.wait_time = reload_time
 	add_child(reload_timer)
 	
-	# Sets current ammo count to zero to prevent shooting on pickup
-	ammo_count = 0
+	# Ensures magazine is full of ammo when picked up
+	ammo_count = max_ammo_count
 
 # Sets player that holds this pickup
 func set_player(_player):
 	player = _player
+	p_string = player.p_string
 
 # Summons bullet and subtracts from ammo count
 func shoot():
@@ -58,8 +63,15 @@ func shoot():
 
 # Handles actual attacking for SMG
 func _physics_process(_delta):
+	# Waits until grab button is released before allowing shooting
+	if just_picked_up and Input.is_action_just_released(p_string + "attack"):
+		just_picked_up = false
+	
+	# Combines boolean statements for cleaner code
+	var loaded = ammo_count > 0 and reload_timer.is_stopped()
+	
 	# Only shoots gun when it has ammo and is not currently reloading
-	if Input.is_action_pressed(player.p_string + "attack") and ammo_count > 0 and reload_timer.is_stopped():
+	if Input.is_action_pressed(p_string + "attack") and loaded and !just_picked_up:
 		# Waits a short time before firing each bullet to prevent clumping
 		if gap_timer.is_stopped():
 			shoot()
