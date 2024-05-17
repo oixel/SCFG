@@ -219,7 +219,22 @@ func _physics_process(delta):
 		transform.x.x = sign(direction)
 		health_text.get_parent().transform.x.x = sign(direction)
 	# Else if need_aiming and get input on aiming buttons
-		
+	
+	#
+	# VERY ROUGH TEST FOR AIMING
+	#
+	if Input.is_action_pressed(p_string + "aim_right"):
+		$AimLineSprite.rotation += 0.05
+		if $AimLineSprite.rotation > 360:
+			$AimLineSprite.rotation = 0
+	
+	if Input.is_action_pressed(p_string + "aim_left"):
+		$AimLineSprite.rotation -= 0.05
+		if $AimLineSprite.rotation < -360:
+			$AimLineSprite.rotation = 0
+	#
+	#
+	#
 	
 	# Applies knockback to player
 	velocity += added_forces
