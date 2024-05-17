@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://sct80f1x0d1a"]
+[gd_scene load_steps=14 format=3 uid="uid://sct80f1x0d1a"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.gd" id="1_qpsbt"]
 [ext_resource type="Texture2D" uid="uid://bv7f7n7h0a1cp" path="res://Sprites/white_square.png" id="2_nvf0f"]
 [ext_resource type="Texture2D" uid="uid://bsvw67veikdka" path="res://Sprites/Player/Eyes.png" id="3_2onhy"]
 [ext_resource type="Texture2D" uid="uid://dj3cihqrpp2ed" path="res://Sprites/Misc/red_heart.png" id="4_5b55y"]
 [ext_resource type="Script" path="res://Scripts/Player/Hand.gd" id="5_aiy0w"]
+[ext_resource type="Texture2D" uid="uid://s6murjt5r2hh" path="res://Sprites/Player/line.png" id="6_4vcb4"]
 
 [sub_resource type="Animation" id="Animation_joguo"]
 length = 0.001
@@ -281,3 +282,9 @@ sprite = NodePath("ItemSprite")
 position = Vector2(-13, 14)
 rotation = 0.253073
 scale = Vector2(0.05, 0.05)
+
+[node name="AimLineSprite" type="Sprite2D" parent="."]
+rotation = -6.28319
+scale = Vector2(3.72, 1)
+texture = ExtResource("6_4vcb4")
+offset = Vector2(16, 0)
