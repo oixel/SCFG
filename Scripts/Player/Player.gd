@@ -50,6 +50,9 @@ var jump_strength = 12
 var crouched = false
 var rolling = false
 
+# Changes how player's direction is handled depending if a pickup requires aiming
+var need_aiming : bool = false
+
 # Changes how fast player falls while in air
 var weight = 6
 
@@ -212,9 +215,11 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, speed)
 	
 	# Flips transform of player
-	if direction != 0: 
+	if !need_aiming and direction != 0: 
 		transform.x.x = sign(direction)
 		health_text.get_parent().transform.x.x = sign(direction)
+	# Else if need_aiming and get input on aiming buttons
+		
 	
 	# Applies knockback to player
 	velocity += added_forces
