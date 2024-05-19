@@ -1,12 +1,12 @@
 extends Node2D
 
-@export var player : CharacterBody2D
-@onready var p_string = "P" + str(player.player_number) + "_"
+var p_string
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+var aim_rotation
 
+# Called on ready in player; sets p_string for this aim manager
+func set_p_string(_p_string):
+	p_string = _p_string
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -22,6 +22,8 @@ func _process(delta):
 		rotation -= 0.05
 		if rotation < -360:
 			rotation = 0
+	
+	aim_rotation = rotation
 	#
 	#
 	#
