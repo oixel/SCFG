@@ -43,6 +43,7 @@ func shoot():
 	var bullet = BULLET.instantiate()
 	player.signal_handler.add_child(bullet)
 	bullet.global_position = player.projectile_point.global_position
+	bullet.rotation = player.aim_manager.aim_rotation
 	
 	# Changes bullet damage depending on exported variable
 	bullet.damage = bullet_damage
