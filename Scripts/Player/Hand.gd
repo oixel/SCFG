@@ -1,7 +1,8 @@
 extends Node2D
 
-var is_empty : bool = true
 @export var sprite : Sprite2D
+
+var is_empty : bool = true
 var item : Node
 
 # Handles picking up new item
