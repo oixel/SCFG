@@ -167,8 +167,7 @@ func _ready():
 	# Sets p_string in aim manager
 	aim_manager.set_p_string(p_string)
 	
-	transform.x.x = sign(1)
-	health_text.get_parent().transform.x.x = sign(1)
+	# Updates transform of aim manager
 	aim_manager.transform.x.x = sign(1)
 
 func _physics_process(delta):
