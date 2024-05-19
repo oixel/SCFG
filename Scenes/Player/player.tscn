@@ -205,13 +205,14 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ph3v2"]
 size = Vector2(86, 48.5)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hand", "totem_point", "projectile_point", "hit_area", "health_text") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hand", "totem_point", "projectile_point", "hit_area", "aim_manager", "health_text") groups=["Player"]]
 collision_layer = 2
 script = ExtResource("1_qpsbt")
 hand = NodePath("Hand")
 totem_point = NodePath("TotemPoint")
 projectile_point = NodePath("ProjectilePoint")
 hit_area = NodePath("HitArea")
+aim_manager = NodePath("AimManager")
 health_text = NodePath("HealthContent/RichTextLabel")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -275,8 +276,9 @@ position = Vector2(-11.6, -41)
 scale = Vector2(0.0367187, 0.0367188)
 texture = ExtResource("4_5b55y")
 
-[node name="Hand" type="Node2D" parent="." node_paths=PackedStringArray("sprite")]
+[node name="Hand" type="Node2D" parent="." node_paths=PackedStringArray("aim_manager", "sprite")]
 script = ExtResource("5_aiy0w")
+aim_manager = NodePath("../AimManager")
 sprite = NodePath("ItemSprite")
 
 [node name="ItemSprite" type="Sprite2D" parent="Hand"]
@@ -284,10 +286,11 @@ position = Vector2(-13, 14)
 rotation = 0.253073
 scale = Vector2(0.05, 0.05)
 
-[node name="AimLineSprite" type="Sprite2D" parent="." node_paths=PackedStringArray("player")]
+[node name="AimManager" type="Node2D" parent="."]
 rotation = -6.28319
 scale = Vector2(3.72, 1)
+script = ExtResource("7_k0jy6")
+
+[node name="AimLineSprite" type="Sprite2D" parent="AimManager"]
 texture = ExtResource("6_4vcb4")
 offset = Vector2(16, 0)
-script = ExtResource("7_k0jy6")
-player = NodePath("..")
