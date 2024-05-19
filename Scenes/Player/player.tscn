@@ -284,11 +284,15 @@ position = Vector2(-13, 14)
 rotation = 0.253073
 scale = Vector2(0.05, 0.05)
 
-[node name="AimManager" type="Node2D" parent="."]
+[node name="AimManager" type="Node2D" parent="." node_paths=PackedStringArray("sprite")]
 rotation = -6.28319
 scale = Vector2(3.72, 1)
 script = ExtResource("7_k0jy6")
+sprite = NodePath("AimLineSprite")
 
 [node name="AimLineSprite" type="Sprite2D" parent="AimManager"]
+scale = Vector2(2.1265, 1)
 texture = ExtResource("6_4vcb4")
 offset = Vector2(16, 0)
+
+[node name="Flippables" type="Node2D" parent="."]
