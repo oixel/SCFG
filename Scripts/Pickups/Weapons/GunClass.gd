@@ -48,5 +48,6 @@ func shoot():
 	# Changes bullet damage depending on exported variable
 	bullet.damage = bullet_damage
 	
-	# Sets movement direction of bullet depending on which way the player is facing
-	bullet.set_direction(sign(player.transform.x.x))
+	# Sets movement direction of bullet depending on which way the player is aiming
+	var direction = Vector2(1, 0).rotated(player.aim_manager.aim_rotation)
+	bullet.initialize(direction, player)

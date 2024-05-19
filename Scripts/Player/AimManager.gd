@@ -9,7 +9,7 @@ func set_p_string(_p_string):
 	p_string = _p_string
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	#
 	# VERY ROUGH TEST FOR AIMING
 	#

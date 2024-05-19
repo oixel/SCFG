@@ -241,7 +241,6 @@ position = Vector2(-53, -49)
 scale = Vector2(2.615, 2.615)
 
 [node name="ProjectilePoint" type="Node2D" parent="."]
-position = Vector2(48, 0)
 
 [node name="HitArea" type="Area2D" parent="."]
 collision_layer = 0
