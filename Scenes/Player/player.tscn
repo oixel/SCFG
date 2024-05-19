@@ -276,9 +276,8 @@ position = Vector2(-11.6, -41)
 scale = Vector2(0.0367187, 0.0367188)
 texture = ExtResource("4_5b55y")
 
-[node name="Hand" type="Node2D" parent="." node_paths=PackedStringArray("aim_manager", "sprite")]
+[node name="Hand" type="Node2D" parent="." node_paths=PackedStringArray("sprite")]
 script = ExtResource("5_aiy0w")
-aim_manager = NodePath("../AimManager")
 sprite = NodePath("ItemSprite")
 
 [node name="ItemSprite" type="Sprite2D" parent="Hand"]

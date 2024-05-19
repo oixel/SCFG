@@ -21,6 +21,9 @@ extends CharacterBody2D
 # Trigger area for melee damage and grab
 @export var hit_area : Area2D
 
+# Manager for all aspects of aiming weapons that need to be aimed
+@export var aim_manager : Node2D
+
 # Starting health
 @export var health : int = 20
 @export var health_text : RichTextLabel
@@ -160,6 +163,9 @@ func _ready():
 	roll_timer.one_shot = true
 	roll_timer.wait_time = roll_time
 	add_child(roll_timer)
+	
+	# Sets p_string in aim manager
+	aim_manager.set_p_string(p_string)
 
 func _physics_process(delta):
 	# Changes rolling state depending if the invulnerability timer is running
