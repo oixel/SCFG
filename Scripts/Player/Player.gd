@@ -166,6 +166,10 @@ func _ready():
 	
 	# Sets p_string in aim manager
 	aim_manager.set_p_string(p_string)
+	
+	transform.x.x = sign(1)
+	health_text.get_parent().transform.x.x = sign(1)
+	aim_manager.transform.x.x = sign(1)
 
 func _physics_process(delta):
 	# Changes rolling state depending if the invulnerability timer is running
@@ -224,6 +228,7 @@ func _physics_process(delta):
 	if !need_aiming and direction != 0: 
 		transform.x.x = sign(direction)
 		health_text.get_parent().transform.x.x = sign(direction)
+		aim_manager.transform.x.x = sign(direction)
 	# Else if need_aiming and get input on aiming buttons
 	
 	# Applies knockback to player
