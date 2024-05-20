@@ -90,6 +90,18 @@ z_index = 1
 scale = Vector2(3.01, 18.97)
 texture = SubResource("GradientTexture1D_q27lo")
 
+[node name="LeftPlatform2" type="StaticBody2D" parent="Environment"]
+position = Vector2(-403, 207)
+scale = Vector2(0.23, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Environment/LeftPlatform2"]
+shape = SubResource("RectangleShape2D_0keou")
+
+[node name="Sprite2D" type="Sprite2D" parent="Environment/LeftPlatform2"]
+z_index = 1
+scale = Vector2(3.01, 18.97)
+texture = SubResource("GradientTexture1D_q27lo")
+
 [node name="RightPlatform" type="StaticBody2D" parent="Environment"]
 position = Vector2(559, -19)
 
