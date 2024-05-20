@@ -6,16 +6,12 @@ extends Node2D
 # Set in mole script;
 var exit_point
 
-# Keep an array of things just passed through to prevent infinite teleporting
-var need_to_exit := []
-
 # Called in mole script to set exit point
 func set_exit(exit):
 	exit_point = exit
 
 # Moves object passed in to out point
 func teleport(obj):
-	need_to_exit.append(obj)
 	obj.global_position = out.global_position
 
 # Checks every frame if a player is trying to use hole
