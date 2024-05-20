@@ -6,7 +6,8 @@ extends CharacterBody2D
 # Shows all potential totem options as a drop down
 @export_enum (
 	"Bird", 
-	"Rabbit"
+	"Rabbit",
+	"Mole"
 	) var totem_name : String
 
 # Stores point where totem should fly to
