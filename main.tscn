@@ -51,7 +51,7 @@ player_number = 2
 [node name="P2_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
 position = Vector2(745, 416)
 player = NodePath("../Player2")
-totem_name = "Rabbit"
+totem_name = "Mole"
 
 [node name="Environment" type="Node2D" parent="."]
 position = Vector2(587, 280)
