@@ -2,6 +2,7 @@ extends Node2D
 
 var p_string
 
+# Stores aim line sprite
 @export var sprite : Sprite2D
 
 # Used by weapons that need aiming to shoot projectiles in correct direction
