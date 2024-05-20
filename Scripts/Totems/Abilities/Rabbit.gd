@@ -16,7 +16,7 @@ var run_speed
 var crouch_run_speed
 
 # Used to check double tapping of movement direction
-var double_tap_timer : Timer
+@onready var double_tap_timer = Timer.new()
 const WAIT_TIME : float = 0.3
 var button_tapped : String
 
@@ -27,7 +27,6 @@ func set_player(_player : CharacterBody2D):
 
 func _ready():
 	# Initializes basic timer
-	double_tap_timer = Timer.new()
 	double_tap_timer.one_shot = true
 	double_tap_timer.wait_time = WAIT_TIME
 	add_child(double_tap_timer)
