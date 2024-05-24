@@ -20,11 +20,11 @@ func set_player(_player : CharacterBody2D):
 func dig() -> void:
 	if !hole1:
 		hole1 = HOLE.instantiate()
-		hole1.position = player.position
+		hole1.global_position = player.global_position
 		player.signal_handler.add_child(hole1)
 	elif !hole2:
 		hole2 = HOLE.instantiate()
-		hole2.position = player.position
+		hole2.global_position = player.global_position
 		player.signal_handler.add_child(hole2)
 		hole1.set_exit(hole2)
 		hole2.set_exit(hole1)
@@ -33,7 +33,7 @@ func dig() -> void:
 		hole1 = hole2
 		
 		hole2 = HOLE.instantiate()
-		hole2.position = player.position
+		hole2.global_position = player.global_position
 		player.signal_handler.add_child(hole2)
 		
 		hole1.set_exit(hole2)
