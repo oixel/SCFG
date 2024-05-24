@@ -22,6 +22,7 @@ func _process(delta):
 	# If collision with something occurs
 	if get_overlapping_bodies():
 		for obj in get_overlapping_bodies():
+			# Prevents you from shooting yourself
 			if obj == player:
 				continue
 			# Damages player if hit
