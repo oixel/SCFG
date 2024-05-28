@@ -5,14 +5,14 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n2ws7"]
 
-[node name="Hole" type="Node2D" node_paths=PackedStringArray("area", "out")]
+[node name="Hole" type="Node2D" node_paths=PackedStringArray("area", "out", "sprite")]
 script = ExtResource("1_1whfe")
 area = NodePath("Area2D")
 out = NodePath("Marker2D")
+sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 5
-position = Vector2(0, 55)
 scale = Vector2(0.155, 0.155)
 texture = ExtResource("1_7m40r")
 
