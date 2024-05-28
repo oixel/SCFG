@@ -97,7 +97,6 @@ func crouch():
 	tween.set_parallel()
 	tween.tween_property(sprite, "global_scale:y", sprite_start_scale / 2, CROUCH_TWEEN_SPEED)
 	tween.tween_property(collider, "global_scale:y", collider_start_scale / 2, CROUCH_TWEEN_SPEED)
-	tween.tween_property(self, "position:y", position.y + 13, CROUCH_TWEEN_SPEED)
 	
 	# Changes portrait's reaction to be crouching
 	signal_handler.emit_signal("alter_portrait", p_string, "crouch")
