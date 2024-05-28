@@ -12,12 +12,7 @@ func set_exit(exit):
 
 # Moves object passed in to out point
 func teleport(obj):
-	obj.global_position.x = out.global_position.x
-	obj.global_position.y = out.global_position.y
-	print(str(obj.global_position.y) + " :: Player")
-	print(str(exit_point.out.global_position.y) + " :: Exit")
-	print(str(out.global_position.y) + " :: Enter")
-	print()
+	obj.global_position = out.global_position
 
 # Checks every frame if a player is trying to use hole
 func _physics_process(_delta):
