@@ -52,6 +52,13 @@ func _process(_delta):
 	if Input.is_action_pressed(p_string + "aim_left"):
 		rotate_aim(-1, sprite.rotation < -360)
 	
+	# Temporary implementation of aiming with mouse
+	if p_string == "P1_":
+		sprite.look_at(get_global_mouse_position())
+		if !sprite.visible:
+			sprite.show()
+			hide_timer.start()
+	
 	# Updates the aim_rotation variable to match the aim line
 	aim_rotation = sprite.rotation
 	
