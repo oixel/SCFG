@@ -226,8 +226,21 @@ libraries = {
 scale = Vector2(0.125, 0.125)
 texture = ExtResource("2_nvf0f")
 
+[node name="CrouchedSprite" type="Sprite2D" parent="Sprites"]
+visible = false
+position = Vector2(0, 14)
+scale = Vector2(0.125, 0.063)
+texture = ExtResource("2_nvf0f")
+
 [node name="EyeSprite" type="Sprite2D" parent="Sprites"]
 position = Vector2(17, -8)
+rotation = 3.14159
+scale = Vector2(0.08, -0.08)
+texture = ExtResource("3_2onhy")
+
+[node name="CrouchedEyeSprite" type="Sprite2D" parent="Sprites"]
+visible = false
+position = Vector2(17, 5)
 rotation = 3.14159
 scale = Vector2(0.08, -0.08)
 texture = ExtResource("3_2onhy")
@@ -235,6 +248,12 @@ texture = ExtResource("3_2onhy")
 [node name="Collider" type="CollisionShape2D" parent="."]
 scale = Vector2(2.615, 2.615)
 shape = SubResource("RectangleShape2D_qtu8a")
+
+[node name="CrouchedCollider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 14)
+scale = Vector2(2.615, 1.308)
+shape = SubResource("RectangleShape2D_qtu8a")
+disabled = true
 
 [node name="TotemPoint" type="Node2D" parent="."]
 position = Vector2(-53, -49)

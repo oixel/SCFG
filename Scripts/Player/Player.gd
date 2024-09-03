@@ -98,12 +98,15 @@ func roll():
 
 # Makes player crouch down
 func crouch():
-	print("CROUCH")
-	# Animates player to crouch down
-	var tween = create_tween()
-	tween.set_parallel()
-	tween.tween_property(sprite, "global_scale:y", sprite_start_scale / 2, CROUCH_TWEEN_SPEED)
-	tween.tween_property(collider, "global_scale:y", collider_start_scale / 2, CROUCH_TWEEN_SPEED)
+	# Enable all crouched parts of player
+	$Sprites/CrouchedSprite.show()
+	$Sprites/CrouchedEyeSprite.show()
+	$CrouchedCollider.disabled = false
+	
+	# Disable all standing parts of player
+	$Sprites/PlayerSprite.hide()
+	$Sprites/EyeSprite.hide()
+	$Collider.disabled = true
 	
 	# Changes portrait's reaction to be crouching
 	signal_handler.emit_signal("alter_portrait", p_string, "crouch")
@@ -112,13 +115,16 @@ func crouch():
 
 # Makes player stand up from crouch
 func stand_up():
-	print("UP")
-	# Animates player to stand up
-	var tween = create_tween()
-	tween.set_parallel()
-	tween.tween_property(sprite, "global_scale:y", sprite_start_scale, CROUCH_TWEEN_SPEED)
-	tween.tween_property(collider, "global_scale:y", collider_start_scale, CROUCH_TWEEN_SPEED)
-
+	# Enable all standing parts of player
+	$Sprites/PlayerSprite.show()
+	$Sprites/EyeSprite.show()
+	$Collider.disabled = false
+	
+	# Disable all crouching parts of player
+	$Sprites/CrouchedSprite.hide()
+	$Sprites/CrouchedEyeSprite.hide()
+	$CrouchedCollider.disabled = true
+	
 	# Changes portrait's reaction back to normal
 	signal_handler.emit_signal("alter_portrait", p_string, "idle")
 	
