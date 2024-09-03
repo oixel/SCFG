@@ -6,6 +6,8 @@ extends CharacterBody2D
 # Differentiates player controls depending on if 1 or 2
 @export_range(1, 2) var player_number : int
 
+@export_enum("keyboard", "controller_1") var control_type : String
+
 # Used to check button presses for different players
 @onready var p_string = "P" + str(player_number) + "_"
 
@@ -168,7 +170,7 @@ func _ready():
 	add_child(roll_timer)
 	
 	# Sets p_string in aim manager
-	aim_manager.set_p_string(p_string)
+	aim_manager.set_control_type(control_type)
 	
 	# Updates transform of aim manager
 	aim_manager.transform.x.x = sign(1)

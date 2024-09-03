@@ -1,6 +1,7 @@
 extends Node2D
 
-var p_string
+# Either mouse and keyboard or one of the controllers
+var control_type
 
 # Stores aim line sprite
 @export var sprite : Sprite2D
@@ -8,57 +9,23 @@ var p_string
 # Used by weapons that need aiming to shoot projectiles in correct direction
 var aim_rotation
 
-# Value by which the aim line is rotated every frame of input
-@export var rotation_speed : float = 0.1
+# Called on ready in player; sets control type for this aim manager
+func set_control_type(_control_type):
+	control_type = _control_type
 
-# Timer that hides the aim line after a certain amount of time passes after aiming
-@export var time_before_hide : float = 3
-@onready var hide_timer  = Timer.new()
-
-# Called on ready in player; sets p_string for this aim manager
-func set_p_string(_p_string):
-	p_string = _p_string
-
-# Called at start
-func _ready():
-	# Ensures that aim line is not visible at start
-	sprite.hide()
-	
-	# Initializes timer for hiding the aim line after aiming
-	hide_timer.one_shot = true
-	hide_timer.wait_time = time_before_hide
-	add_child(hide_timer)
-
-# Rotates aim line depending on multiplier (-1 or 1)
-func rotate_aim(multiplier, out_of_range) -> void:
-	sprite.rotation += rotation_speed * multiplier
-	
-	# Ensures rotation doesn't go out of range of -360 < x < 360
-	if out_of_range:
-		sprite.rotation = 0
-	
-	# Ensures that aim line is visible when aiming
-	if !sprite.visible:
-		sprite.show()
-		hide_timer.start()
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	# Rotates the aim line clockwise
-	#if Input.is_action_pressed(p_string + "aim_right"):
-		#rotate_aim(1, sprite.rotation > 360)
-	#
-	## Rotates the aim line counter-clockwise
-	#if Input.is_action_pressed(p_string + "aim_left"):
-		#rotate_aim(-1, sprite.rotation < -360)
-	
-	# Temporary implementation of aiming with mouse
-	#if p_string == "P1_":
+# Handles aiming with the mouse when player is playing on keyboard
+func mouse_aim():
 	sprite.look_at(get_global_mouse_position())
 	
 	# Sets limit of aiming sprite's rotation to be between -360 and 360
 	if sprite.rotation_degrees > 360 or sprite.rotation_degrees < -360:
 		sprite.rotation = 0
-	
+
 	# Updates the aim_rotation variable to match the aim line
 	aim_rotation = sprite.rotation
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta):
+	# Handles aimining depending on what control type is chosen
+	if control_type == "keyboard":
+		mouse_aim()
