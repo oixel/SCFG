@@ -6,7 +6,7 @@ extends CharacterBody2D
 # Differentiates player controls depending on if 1 or 2
 @export_range(1, 2) var player_number : int
 
-@export_enum("keyboard", "controller_1") var control_type : String
+@export_enum("keyboard", "controller") var control_type : String
 
 # Used to check button presses for different players
 @onready var p_string = "P" + str(player_number) + "_"
@@ -98,6 +98,7 @@ func roll():
 
 # Makes player crouch down
 func crouch():
+	print("CROUCH")
 	# Animates player to crouch down
 	var tween = create_tween()
 	tween.set_parallel()
@@ -111,6 +112,7 @@ func crouch():
 
 # Makes player stand up from crouch
 func stand_up():
+	print("UP")
 	# Animates player to stand up
 	var tween = create_tween()
 	tween.set_parallel()
@@ -184,26 +186,27 @@ func _physics_process(delta):
 		velocity.y += gravity * weight * delta
 	
 	# Handle jump.
-	if Input.is_action_just_pressed(p_string + "up") and is_on_floor():
+	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor():
 		jump()
 	
 	# Creates arch for better control while jumping
-	if Input.is_action_just_released(p_string + "up") and velocity.y < -500:
+	if Input.is_action_just_released("%s_up" % control_type) and velocity.y < -500:
 		velocity.y = -500
 	
 	# Handle crouching
-	if Input.is_action_just_pressed(p_string + "down") and is_on_floor():
-		# Makes player roll if crouch is pressed while moving in a direction
+	if Input.is_action_pressed("%s_down" % control_type) and is_on_floor() and !crouched and !rolling:
+		crouch()
+	elif !Input.is_action_pressed("%s_down" % control_type) and crouched:
+		stand_up()
+	
+	# Handles rolling
+	if Input.is_action_just_pressed("%s_roll" % control_type) and is_on_floor() and !crouched:
 		if direction:
 			roll_direction = direction
 			roll()
-		else:
-			crouch()
-	elif Input.is_action_just_released(p_string + "down"):
-		stand_up()
 	
 	# Plays animation and attempts to attack in front of player
-	if Input.is_action_just_pressed(p_string + "attack") and !rolling:
+	if Input.is_action_just_pressed("%s_attack" % control_type) and !rolling:
 		if hand.is_empty:
 			attack()
 		else:
@@ -215,7 +218,7 @@ func _physics_process(delta):
 	# Prevents chage of direction while rolling
 	if !rolling:
 		# Get the input direction and handle the movement/deceleration.
-		direction = Input.get_axis(p_string + "left", p_string + "right")
+		direction = Input.get_axis("%s_left" % control_type, "%s_right" % control_type)
 	else:
 		direction = roll_direction
 	

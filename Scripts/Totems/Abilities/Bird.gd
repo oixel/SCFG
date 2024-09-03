@@ -1,7 +1,7 @@
 extends Node
 
 var player : CharacterBody2D
-var p_string : String
+var control_type : String
 
 # Stores different weights for gliding functionality
 var normal_weight
@@ -20,7 +20,7 @@ var jump_count : int = 0
 # Initializes player and default values
 func set_player(_player : CharacterBody2D):
 	player = _player
-	p_string = player.p_string
+	control_type = player.control_type
 	normal_weight = player.weight
 
 func _physics_process(delta):
@@ -37,18 +37,18 @@ func _physics_process(delta):
 		player.weight = normal_weight
 	else:
 		# Updates time for glide button being held
-		if Input.is_action_pressed(p_string + "up"):
+		if Input.is_action_pressed("%s_up" % control_type):
 			hold_time += delta
 		
 		# Resets glide hold time if button is released
-		if Input.is_action_just_released(p_string + "up"):
+		if Input.is_action_just_released("%s_up" % control_type):
 			hold_time = 0
 		
 		# Changes player weight depending if glide button is being held
 		player.weight = glide_weight if hold_time >= glide_time_min else normal_weight
 		
 		# Allows for multiple jumps
-		if (Input.is_action_just_pressed(p_string + "up")): 
+		if (Input.is_action_just_pressed("%s_up" % control_type)): 
 			if (jump_count < max_jumps):
 				player.jump()
 				jump_count += 1

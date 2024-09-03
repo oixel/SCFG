@@ -49,12 +49,11 @@ totem_name = "Mole"
 position = Vector2(797, 465)
 signal_handler = NodePath("..")
 player_number = 2
-control_type = "controller_1"
+control_type = "controller"
 
 [node name="P2_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
 position = Vector2(745, 416)
 player = NodePath("../Player2")
-totem_name = "Mole"
 
 [node name="Environment" type="Node2D" parent="."]
 position = Vector2(587, 280)

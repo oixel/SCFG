@@ -1,7 +1,7 @@
 extends Node
 
 var player : CharacterBody2D
-var p_string : String
+var control_type : String
 
 @onready var HOLE = preload("res://Scenes/Misc/hole.tscn")
 var hole1 = null
@@ -12,7 +12,7 @@ enum state {LEFT, RIGHT, DOWN, UP}
 # Gets player's number string from player
 func set_player(_player : CharacterBody2D):
 	player = _player
-	p_string = player.p_string
+	control_type = player.control_type
 
 # Creates hole and sets up logic for teleporting
 func create_hole(hole_state) -> Node2D:
@@ -59,12 +59,12 @@ func _physics_process(_delta):
 		return
 	
 	# When mole user uses their ability in a desired direction, dig hole in that direction
-	if Input.is_action_just_pressed(p_string + "ability"):
-		if Input.is_action_pressed(p_string + "down"):  # Allows digging holes downwards
+	if Input.is_action_just_pressed("%s_ability" % control_type):
+		if Input.is_action_pressed("%s_down" % control_type):  # Allows digging holes downwards
 			if player.is_on_floor() and !player.rolling:
 				dig(state.DOWN)
 		elif player.is_on_wall():  # Allows digging holes in walls
-			if Input.is_action_pressed(p_string + "left"):
+			if Input.is_action_pressed("%s_left" % control_type):
 				dig(state.LEFT)
-			elif Input.is_action_pressed(p_string + "right"):
+			elif Input.is_action_pressed("%s_right" % control_type):
 				dig(state.RIGHT)
