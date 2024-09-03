@@ -29,3 +29,5 @@ func _process(_delta):
 	# Handles aimining depending on what control type is chosen
 	if control_type == "keyboard":
 		mouse_aim()
+	else:
+		aim_rotation = 0
