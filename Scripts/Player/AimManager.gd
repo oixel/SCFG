@@ -53,12 +53,12 @@ func _process(_delta):
 		#rotate_aim(-1, sprite.rotation < -360)
 	
 	# Temporary implementation of aiming with mouse
-	if p_string == "P1_":
-		sprite.look_at(get_global_mouse_position())
-		
-		# Sets limit of aiming sprite's rotation to be between -360 and 360
-		if sprite.rotation_degrees > 360 or sprite.rotation_degrees < -360:
-			sprite.rotation = 0
+	#if p_string == "P1_":
+	sprite.look_at(get_global_mouse_position())
+	
+	# Sets limit of aiming sprite's rotation to be between -360 and 360
+	if sprite.rotation_degrees > 360 or sprite.rotation_degrees < -360:
+		sprite.rotation = 0
 	
 	# Updates the aim_rotation variable to match the aim line
 	aim_rotation = sprite.rotation
