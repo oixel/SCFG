@@ -291,6 +291,7 @@ script = ExtResource("7_k0jy6")
 sprite = NodePath("AimLineSprite")
 
 [node name="AimLineSprite" type="Sprite2D" parent="AimManager"]
+visible = false
 scale = Vector2(2.1265, 1)
 texture = ExtResource("6_4vcb4")
 offset = Vector2(16, 0)

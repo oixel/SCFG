@@ -45,23 +45,20 @@ func rotate_aim(multiplier, out_of_range) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	# Rotates the aim line clockwise
-	if Input.is_action_pressed(p_string + "aim_right"):
-		rotate_aim(1, sprite.rotation > 360)
-	
-	# Rotates the aim line counter-clockwise
-	if Input.is_action_pressed(p_string + "aim_left"):
-		rotate_aim(-1, sprite.rotation < -360)
+	#if Input.is_action_pressed(p_string + "aim_right"):
+		#rotate_aim(1, sprite.rotation > 360)
+	#
+	## Rotates the aim line counter-clockwise
+	#if Input.is_action_pressed(p_string + "aim_left"):
+		#rotate_aim(-1, sprite.rotation < -360)
 	
 	# Temporary implementation of aiming with mouse
 	if p_string == "P1_":
 		sprite.look_at(get_global_mouse_position())
-		if !sprite.visible:
-			sprite.show()
-			hide_timer.start()
+		
+		# Sets limit of aiming sprite's rotation to be between -360 and 360
+		if sprite.rotation_degrees > 360 or sprite.rotation_degrees < -360:
+			sprite.rotation = 0
 	
 	# Updates the aim_rotation variable to match the aim line
 	aim_rotation = sprite.rotation
-	
-	# Hides aim line if time has passed
-	if hide_timer.is_stopped() and sprite.visible:
-		sprite.hide()

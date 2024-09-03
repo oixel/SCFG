@@ -71,6 +71,10 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 # Keeps track of what direction player is moving
 var direction
 
+# Keeps track of what way the player should be facing
+var look_direction = 1
+@onready var aim_sprite = $AimManager/AimLineSprite
+
 # Stores direction that player is moving when roll started
 var roll_direction
 
@@ -222,12 +226,21 @@ func _physics_process(delta):
 			$AnimationPlayer.play("RESET")
 		velocity.x = move_toward(velocity.x, 0, speed)
 	
-	# Flips transform of player
+	
+	
+	# Flips transform of player depending on whether aiming is required
 	if !need_aiming and direction != 0: 
-		transform.x.x = sign(direction)
-		health_text.get_parent().transform.x.x = sign(direction)
-		aim_manager.transform.x.x = sign(direction)
-	# Else if need_aiming and get input on aiming buttons
+		look_direction = sign(direction)
+	elif need_aiming:
+		# Uses the rotation of the aim sprite to make player face the direction they're aiming
+		var rot = aim_sprite.rotation_degrees
+		var looking_left = (-270 < rot and rot < -90) or (90 < rot and rot < 270)
+		look_direction = -1 if looking_left else 1
+	
+	# Alters the player to face the proper direction (either of movement or aim depending on state)
+	transform.x.x = look_direction
+	health_text.get_parent().transform.x.x = look_direction
+	aim_manager.transform.x.x = look_direction
 	
 	# Applies knockback to player
 	velocity += added_forces

@@ -33,6 +33,10 @@ func _on_ready():
 # Sets player that holds this pickup
 func set_player(_player):
 	player = _player
+	
+	# Ensures that player begins facing direction of aim and that aim sprite is visible
+	player.need_aiming = true
+	player.aim_sprite.show()
 
 # Summons bullet and subtracts from ammo count
 func shoot():
