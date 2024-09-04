@@ -54,6 +54,7 @@ var jump_strength = 12
 
 var crouched = false
 var rolling = false
+var can_roll = true
 
 # Changes how player's direction is handled depending if a pickup requires aiming
 var need_aiming : bool = false
@@ -206,7 +207,7 @@ func _physics_process(delta):
 		stand_up()
 	
 	# Handles rolling
-	if Input.is_action_just_pressed("%s_roll" % control_type) and is_on_floor() and !crouched:
+	if Input.is_action_just_pressed("%s_roll" % control_type) and is_on_floor() and !crouched and can_roll:
 		if direction:
 			roll_direction = direction
 			roll()
