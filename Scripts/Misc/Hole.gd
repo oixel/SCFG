@@ -21,5 +21,6 @@ func _physics_process(_delta):
 		if area.get_overlapping_bodies():
 			for obj in area.get_overlapping_bodies():
 				if obj.is_in_group("Player"):
-					if Input.is_action_just_pressed("%s_roll" % obj.control_type):
-						exit_point.teleport(obj)
+					if !obj.rolling:
+						if Input.is_action_just_pressed("%s_roll" % obj.control_type):
+							exit_point.teleport(obj)

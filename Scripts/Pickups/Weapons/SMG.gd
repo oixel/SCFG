@@ -7,8 +7,8 @@ var gap_timer : Timer = Timer.new()
 # Prevents auto shooting when pickup button is held after picking up
 var just_picked_up : bool = true
 
-# Stores player string for cleaner input checking
-var p_string
+# Stores player's control type for cleaner input checking
+var control_type
 
 # Called at start
 func _ready():
@@ -20,21 +20,21 @@ func _ready():
 	gap_timer.wait_time = gap_time
 	add_child(gap_timer)
 	
-	# Sets p_string from player string
-	p_string = player.p_string
+	# Sets control type from player's object
+	control_type = player.control_type
 
 # Summons bullet and subtracts from ammo count
 # Handles actual attacking for SMG
 func _physics_process(_delta):
 	# Waits until grab button is released before allowing shooting
-	if just_picked_up and Input.is_action_just_released(p_string + "attack"):
+	if just_picked_up and Input.is_action_just_released("%s_attack" % control_type):
 		just_picked_up = false
 	
 	# Combines boolean statements for cleaner code
 	var loaded = ammo_count > 0 and reload_timer.is_stopped()
 	
 	# Only shoots gun when it has ammo and is not currently reloading
-	if Input.is_action_pressed(p_string + "attack") and loaded and !just_picked_up:
+	if Input.is_action_pressed("%s_attack" % control_type) and loaded and !just_picked_up:
 		# Waits a short time before firing each bullet to prevent clumping
 		if gap_timer.is_stopped():
 			shoot()
