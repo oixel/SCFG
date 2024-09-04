@@ -43,6 +43,7 @@ control_type = "keyboard"
 
 [node name="P1_Totem" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_jk62i")]
 player = NodePath("../Player")
+totem_name = "Mole"
 
 [node name="Player2" parent="." node_paths=PackedStringArray("signal_handler") instance=ExtResource("1_acsjv")]
 position = Vector2(797, 465)
