@@ -33,9 +33,11 @@ extends CharacterBody2D
 # Damage that basic empty-handed melee attack does
 @export var melee_damage : int = 5
 
-# Invulnerability is applied when player rolls
+# Invulnerability is applied when player rolls or dodges in place
 var roll_timer : Timer = Timer.new()
 var roll_time : float = 0.35
+var dodge_timer : Timer = Timer.new()
+var dodge_time : float = 0.20
 
 # Can be altered by totems to make player take less knockback
 var knockback_resistance : float = 0
@@ -55,6 +57,9 @@ var jump_strength = 12
 var crouched = false
 var rolling = false
 var can_roll = true
+var dodging = false
+var can_dodge = true
+var dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
 
 # Changes how player's direction is handled depending if a pickup requires aiming
 var need_aiming : bool = false
@@ -96,6 +101,15 @@ func jump():
 func roll():
 	$AnimationPlayer.play("roll")
 	roll_timer.start()
+
+# Dodges in place
+func dodge():
+	$AnimationPlayer.play("dodge")
+	dodge_timer.start()
+	
+	# Prevents infinite air dodging
+	if !is_on_floor():
+		dodge_ready = false
 
 # Makes player crouch down
 func crouch():
@@ -150,7 +164,7 @@ func attack():
 
 # Takes damage and applies knockback when player is hit
 func hit(damage, knockback, hit_direction):
-	if !rolling:
+	if !rolling and !dodging:
 		# Damages player and updates health text
 		health -= damage
 		health_text.text = "[center]" + str(health)
@@ -162,7 +176,10 @@ func hit(damage, knockback, hit_direction):
 		if health <= 0:
 			die()
 		
+		# Returns true since damaging attempt succeeded
 		return true
+	
+	# Returns fall if damaging attempt fails
 	return false
 
 # Kills player
@@ -178,6 +195,10 @@ func _ready():
 	roll_timer.wait_time = roll_time
 	add_child(roll_timer)
 	
+	dodge_timer.one_shot = true
+	dodge_timer.wait_time = dodge_time
+	add_child(dodge_timer)
+	
 	# Sets p_string in aim manager
 	aim_manager.set_control_type(control_type)
 	
@@ -185,12 +206,21 @@ func _ready():
 	aim_manager.transform.x.x = sign(1)
 
 func _physics_process(delta):
-	# Changes rolling state depending if the invulnerability timer is running
+	# Changes dodging states depending if their invulnerability timers are running
 	rolling = false if roll_timer.is_stopped() else true
+	dodging = false if dodge_timer.is_stopped() else true
 	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
+	
+	# Resets air dodge
+	if !dodge_ready:
+		if is_on_floor():
+			dodge_ready = true
+	
+	if dodging:
+		velocity.y = 0
 	
 	# Handle jump.
 	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor():
@@ -207,10 +237,12 @@ func _physics_process(delta):
 		stand_up()
 	
 	# Handles rolling
-	if Input.is_action_just_pressed("%s_roll" % control_type) and is_on_floor() and !crouched and can_roll:
-		if direction:
+	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling:
+		if direction and is_on_floor() and !crouched and can_roll:
 			roll_direction = direction
 			roll()
+		elif can_dodge and dodge_ready:
+			dodge()
 	
 	# Plays animation and attempts to attack in front of player
 	if Input.is_action_just_pressed("%s_attack" % control_type) and !rolling:
@@ -223,11 +255,13 @@ func _physics_process(delta):
 	speed = crouch_speed if crouched else walk_speed
 	
 	# Prevents chage of direction while rolling
-	if !rolling:
+	if !rolling and !dodging:
 		# Get the input direction and handle the movement/deceleration.
 		direction = Input.get_axis("%s_left" % control_type, "%s_right" % control_type)
-	else:
+	elif rolling:
 		direction = roll_direction
+	else:
+		direction = 0
 	
 	if direction:
 		if !$AnimationPlayer.is_playing():
@@ -237,8 +271,6 @@ func _physics_process(delta):
 		if !direction and !$AnimationPlayer.is_playing():
 			$AnimationPlayer.play("RESET")
 		velocity.x = move_toward(velocity.x, 0, speed)
-	
-	
 	
 	# Flips transform of player depending on whether aiming is required
 	if !need_aiming and direction != 0: 
