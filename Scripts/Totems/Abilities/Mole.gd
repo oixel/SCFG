@@ -7,8 +7,6 @@ var control_type : String
 var hole1 = null
 var hole2 = null
 
-enum state {LEFT, RIGHT, DOWN, UP}
-
 # Gets player's number string from player
 func set_player(_player : CharacterBody2D):
 	player = _player
@@ -18,12 +16,14 @@ func set_player(_player : CharacterBody2D):
 func create_hole(hole_state) -> Node2D:
 	var offset = Vector2(0, 0)
 	
+	var key : String = ""
+	
 	# Sets proper offset depending on function call
-	if hole_state == state.DOWN:
+	if hole_state == "down":
 		offset = Vector2(0, 55)
-	elif hole_state == state.LEFT:
+	elif hole_state == "left":
 		offset = Vector2(-55, 0)
-	elif hole_state == state.RIGHT:
+	elif hole_state == "right":
 		offset = Vector2(55, 0)
 	
 	# Creates hole at player with proper offset
@@ -31,11 +31,14 @@ func create_hole(hole_state) -> Node2D:
 	hole.global_position = player.global_position
 	hole.sprite.global_position += offset
 	
+	# Sets the key dependent on what position it was created in
+	hole.set_key(hole_state)
+	
 	# Ensures the hole is accessible to the mole player
 	player.signal_handler.add_child(hole)
 	return hole
 
-#
+# Creates / deletes holes and fills out the exit functionality depending on hole count
 func dig(hole_state) -> void:
 	if !hole1:
 		hole1 = create_hole(hole_state)
@@ -62,9 +65,9 @@ func _physics_process(_delta):
 	if Input.is_action_just_pressed("%s_ability" % control_type):
 		if Input.is_action_pressed("%s_down" % control_type):  # Allows digging holes downwards
 			if player.is_on_floor() and !player.rolling:
-				dig(state.DOWN)
+				dig("down")
 		elif player.is_on_wall():  # Allows digging holes in walls
 			if Input.is_action_pressed("%s_left" % control_type):
-				dig(state.LEFT)
+				dig("left")
 			elif Input.is_action_pressed("%s_right" % control_type):
-				dig(state.RIGHT)
+				dig("right")

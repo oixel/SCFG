@@ -25,6 +25,3 @@ shape = SubResource("RectangleShape2D_n2ws7")
 
 [node name="Marker2D" type="Marker2D" parent="."]
 scale = Vector2(0.04, 0.04)
-
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
