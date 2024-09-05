@@ -61,7 +61,6 @@ var jump_strength = 12
 var crouched = false
 var rolling = false
 var can_roll = true
-var can_air_roll = true  # Prevents some totems like bird from air rolling to prevent abuse
 var dodging = false
 var can_dodge = true
 var dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
@@ -113,19 +112,14 @@ func roll():
 	
 	# Air rolls or regular rolls depdening on grounded status
 	if !is_on_floor():
-		# If player does not have a totem that abuse air roll's extra verticality (e.g. Bird), 
-		# apply roll boost in the air!
-		if can_air_roll:
-			velocity.y = 0
-			added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
-		else:
-			# Otherwise, (if abusive totem) dodge instead
-			dodge()
-			return
+		# Applies both horizontal and vertical roll boosts when air rolling
+		velocity.y = 0
+		added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
+	
 		
 		dodge_ready = false
 	else:
-		# Apply roll boost if rolling on ground regardless of totem
+		# Applies only horizontal roll boost if rolling on ground
 		added_forces = Vector2(direction * ROLL_BOOST, 0)
 	
 	# 
@@ -253,7 +247,7 @@ func _physics_process(delta):
 			dodge_ready = true
 	
 	# Pauses gravity when dodging unless using a totem like bird (to prevent abuse)
-	if dodging and can_air_roll:
+	if dodging:
 		velocity.y = 0
 	
 	# Handle jump.
