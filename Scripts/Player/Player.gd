@@ -39,6 +39,10 @@ var roll_time : float = 0.35
 var dodge_timer : Timer = Timer.new()
 var dodge_time : float = 0.20
 
+# The amount of time that roll / dodging takes before it can be used again
+var roll_refresh_timer : Timer = Timer.new()
+var roll_refresh_time : float = 0.5
+
 # Refers to the speed boosts obtained when rolling
 const ROLL_BOOST = 300
 const AIR_ROLL_VERT_BOOST = -250
@@ -62,8 +66,9 @@ var crouched = false
 var rolling = false
 var can_roll = true
 var dodging = false
-var can_dodge = true
-var dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
+var can_stiff_dodge = true
+var roll_ready = false  # Prevents spamming roll button
+var air_dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
 
 # Changes how player's direction is handled depending if a pickup requires aiming
 var need_aiming : bool = false
@@ -104,7 +109,7 @@ func jump():
 # Plays roll animation and grants temporary invulnerability
 func roll():
 	# Prevents any rolling if in the air and no air roll is available
-	if !is_on_floor() and !dodge_ready:
+	if !is_on_floor() and !air_dodge_ready:
 		return
 	
 	# Plays basic rolling animation
@@ -117,12 +122,15 @@ func roll():
 		added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
 	
 		
-		dodge_ready = false
+		air_dodge_ready = false
 	else:
 		# Applies only horizontal roll boost if rolling on ground
 		added_forces = Vector2(direction * ROLL_BOOST, 0)
 	
 	roll_timer.start()
+	
+	# Automatically starts roll refresh to prevent roll spamming
+	roll_refresh_timer.start()
 
 # Dodges in place
 func dodge():
@@ -132,7 +140,10 @@ func dodge():
 	
 	# Prevents infinite air dodging
 	if !is_on_floor():
-		dodge_ready = false
+		air_dodge_ready = false
+	
+	# Automatically starts roll refresh to prevent dodge spamming
+	roll_refresh_timer.start()
 
 # Makes player crouch down
 func crouch():
@@ -223,6 +234,11 @@ func _ready():
 	dodge_timer.wait_time = dodge_time
 	add_child(dodge_timer)
 	
+	# Handles the time that it takes before roll or dodge can be used again
+	roll_refresh_timer.one_shot = true
+	roll_refresh_timer.wait_time = roll_refresh_time
+	add_child(roll_refresh_timer)
+	
 	# Sets p_string in aim manager
 	aim_manager.set_control_type(control_type)
 	
@@ -231,17 +247,20 @@ func _ready():
 
 func _physics_process(delta):
 	# Changes dodging states depending if their invulnerability timers are running
-	rolling = false if roll_timer.is_stopped() else true
-	dodging = false if dodge_timer.is_stopped() else true
+	rolling = !roll_timer.is_stopped()
+	dodging = !dodge_timer.is_stopped()
+	
+	# Prevents dodging / rolling if the refresh time hasn't ended
+	roll_ready = roll_refresh_timer.is_stopped()
 	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
 	
 	# Resets air dodge
-	if !dodge_ready:
+	if !air_dodge_ready:
 		if is_on_floor():
-			dodge_ready = true
+			air_dodge_ready = true
 	
 	# Pauses gravity when dodging unless using a totem like bird (to prevent abuse)
 	if dodging:
@@ -261,12 +280,12 @@ func _physics_process(delta):
 	elif !Input.is_action_pressed("%s_down" % control_type) and crouched:
 		stand_up()
 	
-	# Handles rolling
-	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling:
+	# Handles rolling / dodging if not already in the process of either and if not in refresh period
+	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling and !dodging and roll_ready:
 		if direction and !crouched and can_roll:
 			roll_direction = direction
 			roll()
-		elif can_dodge and dodge_ready:
+		elif can_stiff_dodge and air_dodge_ready:
 			dodge()
 	
 	# Plays animation and attempts to attack in front of player
