@@ -16,8 +16,6 @@ func set_player(_player : CharacterBody2D):
 func create_hole(hole_state) -> Node2D:
 	var offset = Vector2(0, 0)
 	
-	var key : String = ""
-	
 	# Sets proper offset depending on function call
 	if hole_state == "down":
 		offset = Vector2(0, 55)
