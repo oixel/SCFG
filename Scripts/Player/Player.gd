@@ -122,9 +122,6 @@ func roll():
 		# Applies only horizontal roll boost if rolling on ground
 		added_forces = Vector2(direction * ROLL_BOOST, 0)
 	
-	# 
-	move_and_slide()
-	
 	roll_timer.start()
 
 # Dodges in place
