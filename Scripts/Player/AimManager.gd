@@ -7,7 +7,7 @@ var control_type
 @export var sprite : Sprite2D
 
 # Used by weapons that need aiming to shoot projectiles in correct direction
-var aim_rotation
+var aim_rotation = 0
 
 # Called on ready in player; sets control type for this aim manager
 func set_control_type(_control_type):
