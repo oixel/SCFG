@@ -280,7 +280,7 @@ func _physics_process(delta):
 	elif !Input.is_action_pressed("%s_down" % control_type) and crouched:
 		stand_up()
 	
-	# Handles rolling / dodging if not already in the process of either and if not in refresh period
+	# Handles rolling / dodging if not already in the process of either and if not in refresh period 
 	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling and !dodging and roll_ready:
 		if direction and !crouched and can_roll:
 			roll_direction = direction

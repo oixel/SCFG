@@ -45,7 +45,7 @@ func _physics_process(delta):
 			hold_time = 0
 		
 		# Changes player weight depending if glide button is being held and if an air dodge had been used
-		player.weight = glide_weight if hold_time >= glide_time_min and player.dodge_ready else normal_weight
+		player.weight = glide_weight if hold_time >= glide_time_min and player.air_dodge_ready else normal_weight
 		
 		# Allows for multiple jumps
 		if (Input.is_action_just_pressed("%s_up" % control_type)): 
