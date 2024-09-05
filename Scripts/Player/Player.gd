@@ -39,6 +39,10 @@ var roll_time : float = 0.35
 var dodge_timer : Timer = Timer.new()
 var dodge_time : float = 0.20
 
+# Refers to the speed boosts obtained when rolling
+const ROLL_BOOST = 300
+const AIR_ROLL_VERT_BOOST = -250
+
 # Can be altered by totems to make player take less knockback
 var knockback_resistance : float = 0
 
@@ -57,6 +61,7 @@ var jump_strength = 12
 var crouched = false
 var rolling = false
 var can_roll = true
+var can_air_roll = true  # Prevents some totems like bird from air rolling to prevent abuse
 var dodging = false
 var can_dodge = true
 var dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
@@ -99,11 +104,38 @@ func jump():
 
 # Plays roll animation and grants temporary invulnerability
 func roll():
+	# Prevents any rolling if in the air and no air roll is available
+	if !is_on_floor() and !dodge_ready:
+		return
+	
+	# Plays basic rolling animation
 	$AnimationPlayer.play("roll")
+	
+	# Air rolls or regular rolls depdening on grounded status
+	if !is_on_floor():
+		# If player does not have a totem that abuse air roll's extra verticality (e.g. Bird), 
+		# apply roll boost in the air!
+		if can_air_roll:
+			velocity.y = 0
+			added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
+		else:
+			# Otherwise, (if abusive totem) dodge instead
+			dodge()
+			return
+		
+		dodge_ready = false
+	else:
+		# Apply roll boost if rolling on ground regardless of totem
+		added_forces = Vector2(direction * ROLL_BOOST, 0)
+	
+	# 
+	move_and_slide()
+	
 	roll_timer.start()
 
 # Dodges in place
 func dodge():
+	# Plays animation and starts invulnerability timer
 	$AnimationPlayer.play("dodge")
 	dodge_timer.start()
 	
@@ -164,6 +196,7 @@ func attack():
 
 # Takes damage and applies knockback when player is hit
 func hit(damage, knockback, hit_direction):
+	# Only allows damage when not in an invulnerable state
 	if !rolling and !dodging:
 		# Damages player and updates health text
 		health -= damage
@@ -219,11 +252,12 @@ func _physics_process(delta):
 		if is_on_floor():
 			dodge_ready = true
 	
-	if dodging:
+	# Pauses gravity when dodging unless using a totem like bird (to prevent abuse)
+	if dodging and can_air_roll:
 		velocity.y = 0
 	
 	# Handle jump.
-	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor():
+	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor() and !rolling:
 		jump()
 	
 	# Creates arch for better control while jumping
@@ -238,14 +272,14 @@ func _physics_process(delta):
 	
 	# Handles rolling
 	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling:
-		if direction and is_on_floor() and !crouched and can_roll:
+		if direction and !crouched and can_roll:
 			roll_direction = direction
 			roll()
 		elif can_dodge and dodge_ready:
 			dodge()
 	
 	# Plays animation and attempts to attack in front of player
-	if Input.is_action_just_pressed("%s_attack" % control_type) and !rolling:
+	if Input.is_action_just_pressed("%s_attack" % control_type) and !rolling and !dodging:
 		if hand.is_empty:
 			attack()
 		else:
@@ -263,11 +297,11 @@ func _physics_process(delta):
 	else:
 		direction = 0
 	
-	if direction:
-		if !$AnimationPlayer.is_playing():
+	if direction and !rolling:
+		if !$AnimationPlayer.is_playing() and is_on_floor():
 			$AnimationPlayer.play("walk")
 		velocity.x = direction * speed
-	else:
+	elif !rolling:
 		if !direction and !$AnimationPlayer.is_playing():
 			$AnimationPlayer.play("RESET")
 		velocity.x = move_toward(velocity.x, 0, speed)

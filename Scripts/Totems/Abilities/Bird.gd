@@ -22,6 +22,8 @@ func set_player(_player : CharacterBody2D):
 	player = _player
 	control_type = player.control_type
 	normal_weight = player.weight
+	
+	player.can_air_roll = false
 
 func _physics_process(delta):
 	# Prevents code from running if player just died
