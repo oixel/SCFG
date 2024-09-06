@@ -1,7 +1,7 @@
 extends Node
 
 var player : CharacterBody2D
-var p_string : String
+var control_type : String
 
 const JUMP_MULTIPLIER : float = 1.25
 const RUN_MULTIPLIER : float = 1.3
@@ -23,7 +23,7 @@ var button_tapped : String
 # Default set_player function for all totems
 func set_player(_player : CharacterBody2D):
 	player = _player
-	p_string = player.p_string
+	control_type = player.control_type
 
 func _ready():
 	# Initializes basic timer
@@ -46,25 +46,25 @@ func _physics_process(_delta):
 		return
 	
 	# Stops running when direction is let go
-	if Input.is_action_just_released(p_string + "right") or Input.is_action_just_released(p_string + "left") and running:
+	if Input.is_action_just_released("%s_right" % control_type) or Input.is_action_just_released("%s_left" % control_type) and running:
 		running = false
 	
 	# Handles running to the right
-	if Input.is_action_just_pressed(p_string + "right"):
-		if !double_tap_timer.is_stopped() and button_tapped == p_string + "right" and !running:
+	if Input.is_action_just_pressed("%s_right" % control_type):
+		if !double_tap_timer.is_stopped() and button_tapped == control_type + "_right" and !running:
 			running = true
 			double_tap_timer.stop()
 		else:
-			button_tapped = p_string + "right"
+			button_tapped = control_type + "_right"
 			double_tap_timer.start()
 	
 	# Handles running to the left
-	if Input.is_action_just_pressed(p_string + "left"):
-		if !double_tap_timer.is_stopped() and button_tapped == p_string + "left" and !running:
+	if Input.is_action_just_pressed("%s_left" % control_type):
+		if !double_tap_timer.is_stopped() and button_tapped == control_type + "_left" and !running:
 			running = true
 			double_tap_timer.stop()
 		else:
-			button_tapped = p_string + "left"
+			button_tapped = control_type + "_left"
 			double_tap_timer.start()
 	
 	# Changes player's movement speed if running
