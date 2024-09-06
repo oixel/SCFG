@@ -33,6 +33,14 @@ extends CharacterBody2D
 # Damage that basic empty-handed melee attack does
 @export var melee_damage : int = 5
 
+var crouched = false
+var rolling = false
+var can_roll = true
+var dodging = false
+var can_stiff_dodge = true
+var roll_ready = true  # Prevents spamming roll button
+var air_dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
+
 # Invulnerability is applied when player rolls or dodges in place
 var roll_timer : Timer = Timer.new()
 var roll_time : float = 0.35
@@ -61,14 +69,6 @@ var walk_speed = 500.0
 var crouch_speed = 250.0
 var jump_strength = 12
 @onready var speed = walk_speed
-
-var crouched = false
-var rolling = false
-var can_roll = true
-var dodging = false
-var can_stiff_dodge = true
-var roll_ready = false  # Prevents spamming roll button
-var air_dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
 
 # Changes how player's direction is handled depending if a pickup requires aiming
 var need_aiming : bool = false
@@ -106,6 +106,22 @@ func get_totem_point():
 func jump():
 	velocity.y = jump_strength * -100
 
+# Re-enables rolling and dodging (called on reload timer's timeout)
+func _reset_roll():
+	roll_ready = true
+	
+	# Changes visibility of dodge icon to indicate dodge availability
+	signal_handler.emit_signal("change_dodge_icon", p_string, roll_ready)
+
+# Called in roll and dodge functions to handle spam prevention
+func start_roll_refresh():
+	# Starts refresh time and sets state instantly
+	roll_refresh_timer.start()
+	roll_ready = false
+	
+	# Changes visibility of dodge icon to indicate dodge availability
+	signal_handler.emit_signal("change_dodge_icon", p_string, roll_ready)
+
 # Plays roll animation and grants temporary invulnerability
 func roll():
 	# Prevents any rolling if in the air and no air roll is available
@@ -120,30 +136,42 @@ func roll():
 		# Applies both horizontal and vertical roll boosts when air rolling
 		velocity.y = 0
 		added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
-	
 		
 		air_dodge_ready = false
 	else:
 		# Applies only horizontal roll boost if rolling on ground
 		added_forces = Vector2(direction * ROLL_BOOST, 0)
 	
+	# Starts timer that resets rolling state when it times out
 	roll_timer.start()
+	rolling = true
 	
-	# Automatically starts roll refresh to prevent roll spamming
-	roll_refresh_timer.start()
+	# Prevents roll spam
+	start_roll_refresh()
+
+# Resets rolling state (called on rolling timer's timeout)
+func _end_rolling():
+	rolling = false
 
 # Dodges in place
 func dodge():
-	# Plays animation and starts invulnerability timer
+	# Plays dodging in place animation
 	$AnimationPlayer.play("dodge")
+	
+	# Starts timer that resets dodging state when it times out
 	dodge_timer.start()
+	dodging = true
 	
 	# Prevents infinite air dodging
 	if !is_on_floor():
 		air_dodge_ready = false
 	
-	# Automatically starts roll refresh to prevent dodge spamming
-	roll_refresh_timer.start()
+	# Prevents dodge spam
+	start_roll_refresh()
+
+# Resets dodging state (called on dodging timer's timeout)
+func _end_dodging():
+	dodging = false
 
 # Makes player crouch down
 func crouch():
@@ -228,15 +256,18 @@ func _ready():
 	# Handles invulnerability caused by roll time
 	roll_timer.one_shot = true
 	roll_timer.wait_time = roll_time
+	roll_timer.timeout.connect(_end_rolling)
 	add_child(roll_timer)
 	
 	dodge_timer.one_shot = true
 	dodge_timer.wait_time = dodge_time
+	dodge_timer.timeout.connect(_end_dodging)
 	add_child(dodge_timer)
 	
 	# Handles the time that it takes before roll or dodge can be used again
 	roll_refresh_timer.one_shot = true
 	roll_refresh_timer.wait_time = roll_refresh_time
+	roll_refresh_timer.timeout.connect(_reset_roll)
 	add_child(roll_refresh_timer)
 	
 	# Sets p_string in aim manager
@@ -246,16 +277,6 @@ func _ready():
 	aim_manager.transform.x.x = sign(1)
 
 func _physics_process(delta):
-	# Changes dodging states depending if their invulnerability timers are running
-	rolling = !roll_timer.is_stopped()
-	dodging = !dodge_timer.is_stopped()
-	
-	# Prevents dodging / rolling if the refresh time hasn't ended
-	roll_ready = roll_refresh_timer.is_stopped()
-	
-	# Changes visibility of dodge icon to indicate dodge availability
-	signal_handler.emit_signal("change_dodge_icon", p_string, roll_ready)
-	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
