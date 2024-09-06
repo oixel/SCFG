@@ -253,6 +253,9 @@ func _physics_process(delta):
 	# Prevents dodging / rolling if the refresh time hasn't ended
 	roll_ready = roll_refresh_timer.is_stopped()
 	
+	# Changes visibility of dodge icon to indicate dodge availability
+	signal_handler.emit_signal("change_dodge_icon", p_string, roll_ready)
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
@@ -267,7 +270,7 @@ func _physics_process(delta):
 		velocity.y = 0
 	
 	# Handle jump.
-	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor() and !rolling:
+	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor() and !rolling and !dodging and !crouched:
 		jump()
 	
 	# Creates arch for better control while jumping
@@ -280,7 +283,7 @@ func _physics_process(delta):
 	elif !Input.is_action_pressed("%s_down" % control_type) and crouched:
 		stand_up()
 	
-	# Handles rolling / dodging if not already in the process of either and if not in refresh period 
+	# Handles rolling / dodging if not already in the process of either and if not in refresh period
 	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling and !dodging and roll_ready:
 		if direction and !crouched and can_roll:
 			roll_direction = direction

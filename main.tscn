@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bn16p6wb5glst"]
+[gd_scene load_steps=14 format=3 uid="uid://bn16p6wb5glst"]
 
 [ext_resource type="PackedScene" uid="uid://sct80f1x0d1a" path="res://Scenes/Player/player.tscn" id="1_acsjv"]
 [ext_resource type="Script" path="res://Scripts/World/SignalHandler.gd" id="1_r3egu"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/Player/Portrait.gd" id="4_lascy"]
 [ext_resource type="Texture2D" uid="uid://one3ljjjt2a0" path="res://Sprites/Portrait/Faces/Idle.png" id="5_fl7k8"]
 [ext_resource type="PackedScene" uid="uid://bi8trul88bxub" path="res://Scenes/Pickups/Pickup.tscn" id="5_v7xf1"]
+[ext_resource type="Texture2D" uid="uid://mc18toq8dthb" path="res://Sprites/Portrait/Shield.png" id="9_jtid5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0keou"]
 size = Vector2(750, 20)
@@ -163,7 +164,7 @@ mouse_filter = 2
 script = ExtResource("2_cgmvm")
 signal_handler = NodePath("..")
 
-[node name="P1_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture")]
+[node name="P1_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture", "dodge_icon")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -172,22 +173,23 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("4_lascy")
-face_texture = NodePath("Background/FaceTexture")
+face_texture = NodePath("FaceBackground/FaceTexture")
+dodge_icon = NodePath("DodgeBackground/ShieldTexture")
 
-[node name="Border" type="ColorRect" parent="PortraitController/P1_Portrait"]
+[node name="FaceBorder" type="ColorRect" parent="PortraitController/P1_Portrait"]
 layout_mode = 0
 offset_right = 110.0
 offset_bottom = 110.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Background" type="ColorRect" parent="PortraitController/P1_Portrait"]
+[node name="FaceBackground" type="ColorRect" parent="PortraitController/P1_Portrait"]
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
 mouse_filter = 2
 
-[node name="FaceTexture" type="TextureRect" parent="PortraitController/P1_Portrait/Background"]
+[node name="FaceTexture" type="TextureRect" parent="PortraitController/P1_Portrait/FaceBackground"]
 layout_mode = 1
 offset_right = 105.0
 scale = Vector2(0.95, 0.95)
@@ -195,7 +197,43 @@ texture = ExtResource("5_fl7k8")
 expand_mode = 5
 stretch_mode = 5
 
-[node name="P2_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture")]
+[node name="DodgeBorder" type="ColorRect" parent="PortraitController/P1_Portrait"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 45.0
+offset_right = 185.0
+offset_bottom = 110.0
+mouse_filter = 2
+color = Color(0.174474, 0.32299, 0.550346, 1)
+
+[node name="DodgeBackground" type="ColorRect" parent="PortraitController/P1_Portrait"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 50.0
+offset_right = 180.0
+offset_bottom = 105.0
+mouse_filter = 2
+color = Color(0.93408, 0.93408, 0.93408, 1)
+
+[node name="ShieldTexture" type="TextureRect" parent="PortraitController/P1_Portrait/DodgeBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.5
+offset_top = -29.5
+offset_right = 30.5
+offset_bottom = 29.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.95, 0.95)
+texture = ExtResource("9_jtid5")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="P2_Portrait" type="Control" parent="PortraitController" node_paths=PackedStringArray("face_texture", "dodge_icon")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -204,9 +242,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("4_lascy")
-face_texture = NodePath("Background/FaceTexture")
+face_texture = NodePath("FaceBackground/FaceTexture")
+dodge_icon = NodePath("DodgeBackground/ShieldTexture")
 
-[node name="Border" type="ColorRect" parent="PortraitController/P2_Portrait"]
+[node name="FaceBorder" type="ColorRect" parent="PortraitController/P2_Portrait"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -217,7 +256,7 @@ grow_horizontal = 0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Background" type="ColorRect" parent="PortraitController/P2_Portrait"]
+[node name="FaceBackground" type="ColorRect" parent="PortraitController/P2_Portrait"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -227,12 +266,56 @@ offset_bottom = 100.0
 grow_horizontal = 0
 mouse_filter = 2
 
-[node name="FaceTexture" type="TextureRect" parent="PortraitController/P2_Portrait/Background"]
+[node name="FaceTexture" type="TextureRect" parent="PortraitController/P2_Portrait/FaceBackground"]
 layout_mode = 1
 offset_right = 105.0
 offset_bottom = 105.0
 scale = Vector2(0.95, 0.95)
 texture = ExtResource("5_fl7k8")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="DodgeBorder" type="ColorRect" parent="PortraitController/P2_Portrait"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -186.0
+offset_top = 45.0
+offset_right = -121.0
+offset_bottom = 110.0
+grow_horizontal = 0
+mouse_filter = 2
+color = Color(0.174474, 0.32299, 0.550346, 1)
+
+[node name="DodgeBackground" type="ColorRect" parent="PortraitController/P2_Portrait"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -181.0
+offset_top = 50.0
+offset_right = -126.0
+offset_bottom = 105.0
+grow_horizontal = 0
+mouse_filter = 2
+color = Color(0.933333, 0.933333, 0.933333, 1)
+
+[node name="ShieldTexture" type="TextureRect" parent="PortraitController/P2_Portrait/DodgeBackground"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.5
+offset_top = -29.5
+offset_right = 30.5
+offset_bottom = 29.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.95, 0.95)
+texture = ExtResource("9_jtid5")
 expand_mode = 5
 stretch_mode = 5
 
