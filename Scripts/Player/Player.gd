@@ -43,13 +43,17 @@ var air_dodge_ready = false  # Prevents infinite air dodging by only reseting wh
 
 # Invulnerability is applied when player rolls or dodges in place
 var roll_timer : Timer = Timer.new()
-var roll_time : float = 0.35
+var roll_time : float = 0.4
 var dodge_timer : Timer = Timer.new()
 var dodge_time : float = 0.20
 
 # The amount of time that roll / dodging takes before it can be used again
 var roll_refresh_timer : Timer = Timer.new()
 var roll_refresh_time : float = 0.5
+
+# Handles melee cooldown
+var melee_cooldown_timer : Timer = Timer.new()
+var melee_cooldown_time : float = 0.3
 
 # Refers to the speed boosts obtained when rolling
 const ROLL_BOOST = 300
@@ -270,6 +274,11 @@ func _ready():
 	roll_refresh_timer.timeout.connect(_reset_roll)
 	add_child(roll_refresh_timer)
 	
+	# Sets up melee cooldown timer
+	melee_cooldown_timer.one_shot = true
+	melee_cooldown_timer.wait_time = melee_cooldown_time
+	add_child(melee_cooldown_timer)
+	
 	# Sets p_string in aim manager
 	aim_manager.set_control_type(control_type)
 	
@@ -315,7 +324,9 @@ func _physics_process(delta):
 	# Plays animation and attempts to attack in front of player
 	if Input.is_action_just_pressed("%s_attack" % control_type) and !rolling and !dodging:
 		if hand.is_empty:
-			attack()
+			if melee_cooldown_timer.is_stopped():
+				attack()
+				melee_cooldown_timer.start()
 		else:
 			hand.attack()
 	
