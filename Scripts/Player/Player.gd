@@ -41,6 +41,10 @@ var can_stiff_dodge = true
 var roll_ready = true  # Prevents spamming roll button
 var air_dodge_ready = false  # Prevents infinite air dodging by only reseting when floor is touched
 
+# Allows for coyote time when falling off ledge
+var coyote_timer : Timer = Timer.new()
+var coyote_time : float = 0.1
+
 # Invulnerability is applied when player rolls or dodges in place
 var roll_timer : Timer = Timer.new()
 var roll_time : float = 0.4
@@ -257,6 +261,11 @@ func die():
 
 # Called at start
 func _ready():
+	# Handles coyote time when moving off ledges
+	coyote_timer.one_shot = true
+	coyote_timer.wait_time = coyote_time
+	add_child(coyote_timer)
+	
 	# Handles invulnerability caused by roll time
 	roll_timer.one_shot = true
 	roll_timer.wait_time = roll_time
@@ -285,10 +294,13 @@ func _ready():
 	# Updates transform of aim manager
 	aim_manager.transform.x.x = sign(1)
 
-func _physics_process(delta):
+func _physics_process(delta):		
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y += gravity * weight * delta
+		
+	if is_on_floor():
+		coyote_timer.start()
 	
 	# Resets air dodge
 	if !air_dodge_ready:
@@ -299,9 +311,10 @@ func _physics_process(delta):
 	if dodging:
 		velocity.y = 0
 	
-	# Handle jump.
-	if Input.is_action_just_pressed("%s_up" % control_type) and is_on_floor() and !rolling and !dodging and !crouched:
+	# Handle jump if in a state where jumping is allowed
+	if Input.is_action_just_pressed("%s_up" % control_type) and !coyote_timer.is_stopped() and !rolling and !dodging and !crouched:
 		jump()
+		coyote_timer.stop()  # If jump occurs, instantly end coyote time to prevent spam jumping
 	
 	# Creates arch for better control while jumping
 	if Input.is_action_just_released("%s_up" % control_type) and velocity.y < -500:
