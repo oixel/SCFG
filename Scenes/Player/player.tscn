@@ -510,9 +510,10 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ph3v2"]
 size = Vector2(86, 48.5)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hand", "totem_point", "projectile_point", "hit_area", "aim_manager", "health_text") groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("animation_player", "hand", "totem_point", "projectile_point", "hit_area", "aim_manager", "health_text") groups=["Player"]]
 collision_layer = 2
 script = ExtResource("1_qpsbt")
+animation_player = NodePath("AnimationPlayer")
 hand = NodePath("Hand")
 totem_point = NodePath("TotemPoint")
 projectile_point = NodePath("ProjectilePoint")

@@ -11,6 +11,9 @@ extends CharacterBody2D
 # Used to check button presses for different players
 @onready var p_string = "P" + str(player_number) + "_"
 
+#
+@export var animation_player : AnimationPlayer
+
 # Stores player's hand node
 @export var hand : Node
 
@@ -96,6 +99,9 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 # Keeps track of what direction player is moving
 var direction
 
+# Tracks what button would cut rolling boost short
+var opposite = "left"
+
 # Keeps track of what way the player should be facing
 var look_direction = 1
 @onready var aim_sprite = $AimManager/AimLineSprite
@@ -137,7 +143,7 @@ func roll():
 		return
 	
 	# Plays basic rolling animation
-	$AnimationPlayer.play("roll")
+	animation_player.play("roll")
 	
 	# Air rolls or regular rolls depdening on grounded status
 	if !is_on_floor():
@@ -164,7 +170,7 @@ func _end_rolling():
 # Dodges in place
 func dodge():
 	# Plays dodging in place animation
-	$AnimationPlayer.play("dodge")
+	animation_player.play("dodge")
 	
 	# Starts timer that resets dodging state when it times out
 	dodge_timer.start()
@@ -217,7 +223,7 @@ func stand_up():
 
 # Handles attacking when empty handed
 func attack():
-	$AnimationPlayer.play("attack")
+	animation_player.play("attack")
 	if hit_area.get_overlapping_bodies():
 		for obj in hit_area.get_overlapping_bodies():
 			# Damages player if in range
@@ -311,6 +317,14 @@ func _physics_process(delta):
 	if dodging:
 		velocity.y = 0
 	
+	# Stops rolling if the opposite button is pressed
+	if rolling and is_on_floor():
+		if Input.is_action_just_pressed("%s_%s" % [control_type, opposite]):
+			velocity.x = 0
+			rolling = false
+			roll_timer.stop()
+			animation_player.stop()
+	
 	# Handle jump if in a state where jumping is allowed
 	if Input.is_action_just_pressed("%s_up" % control_type) and !coyote_timer.is_stopped() and !rolling and !dodging and !crouched:
 		jump()
@@ -330,6 +344,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("%s_roll" % control_type) and !rolling and !dodging and roll_ready:
 		if direction and !crouched and can_roll:
 			roll_direction = direction
+			opposite = "left" if direction > 0 else "right"
 			roll()
 		elif can_stiff_dodge and air_dodge_ready:
 			dodge()
@@ -356,12 +371,12 @@ func _physics_process(delta):
 		direction = 0
 	
 	if direction and !rolling:
-		if !$AnimationPlayer.is_playing() and is_on_floor():
-			$AnimationPlayer.play("walk")
+		if !animation_player.is_playing() and is_on_floor():
+			animation_player.play("walk")
 		velocity.x = direction * speed
 	elif !rolling:
-		if !direction and !$AnimationPlayer.is_playing():
-			$AnimationPlayer.play("RESET")
+		if !direction and !animation_player.is_playing():
+			animation_player.play("RESET")
 		velocity.x = move_toward(velocity.x, 0, speed)
 	
 	# Flips transform of player depending on whether aiming is required
