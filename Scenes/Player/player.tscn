@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://sct80f1x0d1a"]
+[gd_scene load_steps=18 format=3 uid="uid://sct80f1x0d1a"]
 
 [ext_resource type="Script" path="res://Scripts/Player/Player.gd" id="1_qpsbt"]
 [ext_resource type="Texture2D" uid="uid://bv7f7n7h0a1cp" path="res://Sprites/white_square.png" id="2_nvf0f"]
@@ -368,6 +368,36 @@ tracks/9/keys = {
 "values": [Vector2(17, 4)]
 }
 
+[sub_resource type="Animation" id="Animation_hwpu5"]
+resource_name = "halt"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites/PlayerSprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.115, 0.15), Vector2(0.125, 0.125)]
+}
+
+[sub_resource type="Animation" id="Animation_5h3qw"]
+resource_name = "jump"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprites/PlayerSprite:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.115, 0.15), Vector2(0.115, 0.15)]
+}
+
 [sub_resource type="Animation" id="Animation_02d68"]
 resource_name = "roll"
 length = 0.4
@@ -501,6 +531,8 @@ _data = {
 "RESET": SubResource("Animation_joguo"),
 "attack": SubResource("Animation_5478s"),
 "dodge": SubResource("Animation_ar3o0"),
+"halt": SubResource("Animation_hwpu5"),
+"jump": SubResource("Animation_5h3qw"),
 "roll": SubResource("Animation_02d68"),
 "walk": SubResource("Animation_garuy")
 }

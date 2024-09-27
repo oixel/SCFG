@@ -324,6 +324,7 @@ func _physics_process(delta):
 			rolling = false
 			roll_timer.stop()
 			animation_player.stop()
+			animation_player.play("halt")
 	
 	# Handle jump if in a state where jumping is allowed
 	if Input.is_action_just_pressed("%s_up" % control_type) and !coyote_timer.is_stopped() and !rolling and !dodging and !crouched:
@@ -369,6 +370,10 @@ func _physics_process(delta):
 		direction = roll_direction
 	else:
 		direction = 0
+	
+	# Ends walking animation when no longer walking 
+	if direction == 0 and animation_player.current_animation == "walk":
+		animation_player.stop()
 	
 	if direction and !rolling:
 		if !animation_player.is_playing() and is_on_floor():
