@@ -63,7 +63,8 @@ var melee_cooldown_timer : Timer = Timer.new()
 var melee_cooldown_time : float = 0.3
 
 # Refers to the speed boosts obtained when rolling
-const ROLL_BOOST = 300
+const ROLL_BOOST = 50
+const AIR_ROLL_BOOST = 150
 const AIR_ROLL_VERT_BOOST = -250
 
 # Can be altered by totems to make player take less knockback
@@ -149,7 +150,7 @@ func roll():
 	if !is_on_floor():
 		# Applies both horizontal and vertical roll boosts when air rolling
 		velocity.y = 0
-		added_forces = Vector2(direction * ROLL_BOOST, AIR_ROLL_VERT_BOOST)
+		added_forces = Vector2(direction * AIR_ROLL_BOOST, AIR_ROLL_VERT_BOOST)
 		
 		air_dodge_ready = false
 	else:
@@ -303,7 +304,13 @@ func _ready():
 func _physics_process(delta):		
 	# Add the gravity.
 	if not is_on_floor():
-		velocity.y += gravity * weight * delta
+		var fast_falling = Input.is_action_just_pressed("%s_down" % [control_type])
+		
+		var fall_multiplier = 10 if fast_falling else 1
+		
+		
+		velocity.y += gravity * weight * delta * fall_multiplier
+		
 		
 	if is_on_floor():
 		coyote_timer.start()
